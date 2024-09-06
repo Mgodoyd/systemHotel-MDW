@@ -39,6 +39,10 @@ public class cliente {
     @OneToMany(mappedBy = "cliente")
     private Set<reservacion> reservaciones;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private role role;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
