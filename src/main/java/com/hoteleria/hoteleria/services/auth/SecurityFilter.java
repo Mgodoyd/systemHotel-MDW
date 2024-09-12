@@ -16,58 +16,115 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityFilter {
 
-    @Autowired
-    private AuthenticationProvider authenticationProvider;
+        @Autowired
+        private AuthenticationProvider authenticationProvider;
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+        @Autowired
+        private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-                .csrf(csrfConfig -> csrfConfig.disable())
-                .sessionManagement(
-                        sessionMangConfig -> sessionMangConfig
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(authConfig -> {
-                    authConfig.requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll();
-                    authConfig.requestMatchers(HttpMethod.POST, "/api/v1/register").permitAll();
-                    authConfig.requestMatchers(HttpMethod.PUT, "/api/v1/changePassword")
-                            .permitAll();
-                    authConfig.requestMatchers(HttpMethod.POST, "/api/v1/pets/notoken/uuid")
-                            .permitAll();
-                    // authConfig.requestMatchers(HttpMethod.GET, "user").hasAnyAuthority(
-                    // Permission.READ_ALL_RAZAS.name(),
-                    // Permission.EMAIL.name(),
-                    // Permission.ISS.name());
+                http
+                                .csrf(csrfConfig -> csrfConfig.disable())
+                                .sessionManagement(
+                                                sessionMangConfig -> sessionMangConfig
+                                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authenticationProvider(authenticationProvider)
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                                .authorizeHttpRequests(authConfig -> {
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll();
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/register").permitAll();
+                                        authConfig.requestMatchers(HttpMethod.PUT, "/api/v1/changePassword")
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/pets/notoken/uuid")
+                                                        .permitAll();
+                                        // authConfig.requestMatchers(HttpMethod.GET, "user").hasAnyAuthority(
+                                        // Permission.READ_ALL_RAZAS.name(),
+                                        // Permission.EMAIL.name(),
+                                        // Permission.ISS.name());
 
-                    // authConfig.requestMatchers(HttpMethod.GET, "/user").permitAll();
+                                        // authConfig.requestMatchers(HttpMethod.GET, "/user").permitAll();
 
-                    authConfig.requestMatchers(HttpMethod.GET, "/api/v1/personals")
-                            .hasAuthority(Permission.READ_ALL_USERS.name());
-                    // authConfig.requestMatchers(HttpMethod.POST, "/api/v1/users/username")
-                    // .hasAuthority(Permission.READ_ONE_USER.name());
-                    // authConfig.requestMatchers(HttpMethod.POST, "/api/v1/users/uuid")
-                    // .hasAuthority(Permission.READ_ONE_USER.name());
-                    // authConfig.requestMatchers(HttpMethod.PUT, "/api/v1/users")
-                    // .hasAuthority(Permission.UPDATE_ONE_USER.name());
-                    // authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/users")
-                    // .hasAuthority(Permission.DELETE_ONE_USER.name());
-                    // authConfig.requestMatchers(HttpMethod.GET, "/api/v1/razas")
-                    // .hasAnyAuthority(
-                    // Permission.READ_ALL_RAZAS.name(),
-                    // Permission.EMAIL.name(),
-                    // Permission.ISS.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/personals")
+                                                        // .hasAuthority(Permission.READ_ALL_USERS.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/personals/email")
+                                                        // .hasAuthority(Permission.READ_ONE_USER.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/personals/uuid")
+                                                        // .hasAuthority(Permission.READ_ONE_USER.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/personals/phone")
+                                                        // .hasAuthority(Permission.CREATE_ONE_USER.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/personals")
+                                                        // .hasAuthority(Permission.CREATE_ONE_USER.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.PUT, "/api/v1/personals")
+                                                        // .hasAuthority(Permission.UPDATE_ONE_USER.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/personals")
+                                                        // .hasAuthority(Permission.DELETE_ONE_USER.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/hotels")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/hotels/name")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/hotels/uuid")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/hotels")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.PUT, "/api/v1/hotels")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/hotels")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
 
-                    authConfig.anyRequest().denyAll();
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/puestos")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/puestos/name")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/puestos/uuid")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/puestos")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.PUT, "/api/v1/puestos")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/puestos")
+                                                        // .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                                        .permitAll();
 
-                });
+                                        // authConfig.requestMatchers(HttpMethod.POST, "/api/v1/users/username")
+                                        // .hasAuthority(Permission.READ_ONE_USER.name());
+                                        // authConfig.requestMatchers(HttpMethod.POST, "/api/v1/users/uuid")
+                                        // .hasAuthority(Permission.READ_ONE_USER.name());
+                                        // authConfig.requestMatchers(HttpMethod.PUT, "/api/v1/users")
+                                        // .hasAuthority(Permission.UPDATE_ONE_USER.name());
+                                        // authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/users")
+                                        // .hasAuthority(Permission.DELETE_ONE_USER.name());
+                                        // authConfig.requestMatchers(HttpMethod.GET, "/api/v1/razas")
+                                        // .hasAnyAuthority(
+                                        // Permission.READ_ALL_RAZAS.name(),
+                                        // Permission.EMAIL.name(),
+                                        // Permission.ISS.name());
 
-        return http.build();
+                                        authConfig.anyRequest().denyAll();
 
-    }
+                                });
+
+                return http.build();
+
+        }
 
 }

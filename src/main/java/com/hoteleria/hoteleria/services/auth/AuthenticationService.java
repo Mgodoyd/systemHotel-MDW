@@ -34,12 +34,13 @@ public class AuthenticationService {
 
     public personal register(personal request) {
         var user = new personal();
-        user.setPuesto(request.getPuesto());
+        user.setRol(request.getRol());
         user.setHotel(request.getHotel());
-        user.setNombre(request.getNombre());
-        user.setTelefono(request.getTelefono());
+        user.setname(request.getName());
+        user.setPhone(request.getPhone());
+        ;
         user.setEmail(request.getEmail());
-        user.setDireccion(request.getDireccion());
+        user.setAddress(request.getAddress());
         user.setRole(request.getRole());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userRepository.save(user);
@@ -59,7 +60,7 @@ public class AuthenticationService {
 
     private Map<String, Object> generateExtraClaims(personal user) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("name", user.getNombre());
+        extraClaims.put("name", user.getName());
         extraClaims.put("role", user.getRole().name());
         return extraClaims;
     }

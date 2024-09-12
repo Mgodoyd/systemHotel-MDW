@@ -14,7 +14,9 @@ public interface personalInterface extends JpaRepository<personal, UUID> {
 
     Optional<personal> findByEmail(String email);
 
-    personal findByTelefono(String telefono);
+    personal findByPhone(String phone);
+
+    Optional<personal> findById(UUID id);
 
     List<personal> findAll();
 

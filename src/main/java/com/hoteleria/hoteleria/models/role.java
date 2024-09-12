@@ -12,7 +12,10 @@ public enum role {
             Permission.UPDATE_ONE_HABITACION, Permission.READ_ONE_RESERVACION,
             Permission.READ_ONE_HUESPED, Permission.SAVE_ONE_HUESPED)),
 
-    ADMIN(Arrays.asList(Permission.values())),;
+    ADMIN(Arrays.asList(Permission.values())),
+
+    EMPLEADO(Arrays.asList(Permission.READ_ONE_USER, Permission.UPDATE_ONE_USER, Permission.DELETE_ONE_HABITACION,
+            Permission.DELETE_ONE_RESERVACION));
 
     private List<Permission> permissions;
 
@@ -22,9 +25,5 @@ public enum role {
 
     public List<Permission> getPermissions() {
         return permissions;
-    }
-
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
     }
 }

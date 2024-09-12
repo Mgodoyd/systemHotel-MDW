@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "puesto")
@@ -17,8 +18,9 @@ public class puesto {
     @GeneratedValue
     private UUID id;
 
+    @NotBlank(message = "Name is required")
     @Column(length = 100, nullable = false)
-    private String nombre;
+    private String name;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -31,9 +33,9 @@ public class puesto {
     public puesto() {
     }
 
-    public puesto(UUID id, String nombre, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public puesto(UUID id, String name, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.nombre = nombre;
+        this.name = name;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -46,12 +48,12 @@ public class puesto {
         this.id = id;
     }
 
-    public String getNombre() {
-        return this.nombre;
+    public String getName() {
+        return this.name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDateTime getCreatedAt() {

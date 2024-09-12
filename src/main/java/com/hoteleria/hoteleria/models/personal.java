@@ -14,6 +14,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "personal")
@@ -25,29 +30,38 @@ public class personal implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "id_puesto", nullable = false)
-    private puesto puesto;
+    private puesto rol;
 
     @ManyToOne
     @JoinColumn(name = "id_hotel", nullable = false)
     private hotel hotel;
 
+    @NotBlank(message = "Name is required")
     @Column(length = 100, nullable = false)
-    private String nombre;
+    private String name;
 
-    @Column(length = 20)
-    private String telefono;
+    @NotBlank(message = "Phone is required")
+    @Column(length = 8, nullable = false)
+    @Min(value = 10000000, message = "The phone number must have at least 8 digits.")
+    @PositiveOrZero(message = "The phone number must be positive or zero.")
+    private String phone;
 
-    @Column(length = 100)
+    @NotBlank(message = "Email is required")
+    @Pattern(message = "Email is not valid", regexp = "^[A-Za-z0-9+_.-]+@(.+)$")
+    @Column(length = 100, nullable = false)
     private String email;
 
-    @Column(length = 255)
+    @NotBlank(message = "Password is required")
+    @Column(length = 12)
     private String password;
 
-    @Column(length = 255)
-    private String direccion;
+    @NotBlank(message = "Address is required")
+    @Column(length = 50)
+    private String address;
 
+    @NotNull(message = "Role is required")
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private role role;
 
     @CreationTimestamp
@@ -61,16 +75,16 @@ public class personal implements UserDetails {
     public personal() {
     }
 
-    public personal(UUID id, puesto puesto, hotel hotel, String nombre, String password, String telefono, String email,
-            String direccion, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public personal(UUID id, puesto puesto, hotel hotel, String name, String password, String phone, String email,
+            String address, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.puesto = puesto;
+        this.rol = puesto;
         this.hotel = hotel;
-        this.nombre = nombre;
-        this.telefono = telefono;
+        this.name = name;
+        this.phone = phone;
         this.email = email;
         this.password = password;
-        this.direccion = direccion;
+        this.address = address;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -83,12 +97,12 @@ public class personal implements UserDetails {
         this.id = id;
     }
 
-    public puesto getPuesto() {
-        return this.puesto;
+    public puesto getRol() {
+        return this.rol;
     }
 
-    public void setPuesto(puesto puesto) {
-        this.puesto = puesto;
+    public void setRol(puesto rol) {
+        this.rol = rol;
     }
 
     public hotel getHotel() {
@@ -99,20 +113,20 @@ public class personal implements UserDetails {
         this.hotel = hotel;
     }
 
-    public String getNombre() {
-        return this.nombre;
+    public String getName() {
+        return this.name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setname(String name) {
+        this.name = name;
     }
 
-    public String getTelefono() {
-        return this.telefono;
+    public String getPhone() {
+        return this.phone;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -139,12 +153,12 @@ public class personal implements UserDetails {
         this.password = password;
     }
 
-    public String getDireccion() {
-        return this.direccion;
+    public String getAddress() {
+        return this.address;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public LocalDateTime getCreatedAt() {

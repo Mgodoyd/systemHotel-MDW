@@ -1,6 +1,11 @@
 package com.hoteleria.hoteleria.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.NotBlank;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -19,26 +24,32 @@ public class hotel {
     @GeneratedValue
     private UUID id;
 
+    @NotBlank(message = "Name is required")
     @Column(length = 100, nullable = false)
-    private String nombre;
+    private String name;
 
-    @Column(length = 255)
-    private String direccion;
+    @NotBlank(message = "Address is required")
+    @Column(length = 50, nullable = false)
+    private String address;
 
-    @Column(length = 20)
-    private String telefono;
+    @NotNull(message = "Phone is required")
+    @Column(length = 8, nullable = false)
+    @Min(value = 10000000, message = "The phone number must have at least 8 digits.")
+    @PositiveOrZero(message = "The phone number must be positive or zero.")
+    private int phone;
 
-    @Column(length = 100)
+    @Column(length = 25)
+    @Pattern(message = "Email is not valid", regexp = "^[A-Za-z0-9+_.-]+@(.+)$")
     private String email;
 
     @Column(columnDefinition = "TEXT")
-    private String descripcion;
+    private String description;
 
     @OneToMany(mappedBy = "hotel")
-    private Set<personal> personal;
+    private Set<personal> staff;
 
     @OneToMany(mappedBy = "hotel")
-    private Set<habitación> habitaciones;
+    private Set<habitación> rooms;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -51,14 +62,17 @@ public class hotel {
     public hotel() {
     }
 
-    public hotel(UUID id, String nombre, String direccion, String telefono, String email, String descripcion,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public hotel(UUID id, String name, String address, int phone, String email, String description,
+            Set<personal> staff,
+            Set<habitación> rooms, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.telefono = telefono;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
         this.email = email;
-        this.descripcion = descripcion;
+        this.description = description;
+        this.staff = staff;
+        this.rooms = rooms;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -71,28 +85,28 @@ public class hotel {
         this.id = id;
     }
 
-    public String getNombre() {
-        return this.nombre;
+    public String getName() {
+        return this.name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDireccion() {
-        return this.direccion;
+    public String getAddress() {
+        return this.address;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getTelefono() {
-        return this.telefono;
+    public int getPhone() {
+        return this.phone;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setPhone(int phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -103,28 +117,28 @@ public class hotel {
         this.email = email;
     }
 
-    public String getDescripcion() {
-        return this.descripcion;
+    public String getDescription() {
+        return this.description;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Set<personal> getPersonal() {
-        return this.personal;
+    public Set<personal> getStaff() {
+        return this.staff;
     }
 
-    public void setPersonal(Set<personal> personal) {
-        this.personal = personal;
+    public void setStaff(Set<personal> staff) {
+        this.staff = staff;
     }
 
-    public Set<habitación> getHabitaciones() {
-        return this.habitaciones;
+    public Set<habitación> getRooms() {
+        return this.rooms;
     }
 
-    public void setHabitaciones(Set<habitación> habitaciones) {
-        this.habitaciones = habitaciones;
+    public void setRooms(Set<habitación> rooms) {
+        this.rooms = rooms;
     }
 
     public LocalDateTime getCreatedAt() {
