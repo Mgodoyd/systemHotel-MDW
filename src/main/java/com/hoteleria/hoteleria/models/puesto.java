@@ -2,16 +2,21 @@ package com.hoteleria.hoteleria.models;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "puesto")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class puesto {
 
     @Id
@@ -21,6 +26,10 @@ public class puesto {
     @NotBlank(message = "Name is required")
     @Column(length = 100, nullable = false)
     private String name;
+
+    // @OneToMany(mappedBy = "staff")
+    // @JsonManagedReference
+    // private Set<personal> staff;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

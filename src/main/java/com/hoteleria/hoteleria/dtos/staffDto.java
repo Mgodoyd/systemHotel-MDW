@@ -2,17 +2,17 @@ package com.hoteleria.hoteleria.dtos;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hoteleria.hoteleria.models.hotel;
 import com.hoteleria.hoteleria.models.puesto;
 import com.hoteleria.hoteleria.models.role;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class staffDto {
 
     private UUID id;
-    private UUID rolId;
-    private String rolNombre;
-    private UUID hotelId;
-    private String hotelNombre;
+    private rolDTO rol;
+    private hotelDTO hotel;
     private String name;
     private String phone;
     private String email;
@@ -20,18 +20,14 @@ public class staffDto {
     private String address;
     private role role;
 
-    // Constructor vacío
     public staffDto() {
     }
 
-    // Constructor con todos los atributos
-    public staffDto(UUID id, puesto rol, hotel hotel, String name, String phone, String email, String password,
+    public staffDto(UUID id, rolDTO rol, hotelDTO hotel, String name, String phone, String email, String password,
             String address, role role) {
         this.id = id;
-        this.rolId = rol != null ? rol.getId() : null;
-        this.rolNombre = rol != null ? rol.getName() : null;
-        this.hotelId = hotel != null ? hotel.getId() : null;
-        this.hotelNombre = hotel != null ? hotel.getName() : null;
+        this.rol = rol;
+        this.hotel = hotel;
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -39,8 +35,6 @@ public class staffDto {
         this.address = address;
         this.role = role;
     }
-
-    // Getters y Setters
 
     public UUID getId() {
         return this.id;
@@ -50,36 +44,20 @@ public class staffDto {
         this.id = id;
     }
 
-    public UUID getRolId() {
-        return this.rolId;
+    public rolDTO getRol() {
+        return this.rol;
     }
 
-    public void setRolId(UUID rolId) {
-        this.rolId = rolId;
+    public void setRol(rolDTO rol) {
+        this.rol = rol;
     }
 
-    public String getRolNombre() {
-        return this.rolNombre;
+    public hotelDTO getHotel() {
+        return this.hotel;
     }
 
-    public void setRolNombre(String rolNombre) {
-        this.rolNombre = rolNombre;
-    }
-
-    public UUID getHotelId() {
-        return this.hotelId;
-    }
-
-    public void setHotelId(UUID hotelId) {
-        this.hotelId = hotelId;
-    }
-
-    public String getHotelNombre() {
-        return this.hotelNombre;
-    }
-
-    public void setHotelNombre(String hotelNombre) {
-        this.hotelNombre = hotelNombre;
+    public void setHotel(hotelDTO hotel) {
+        this.hotel = hotel;
     }
 
     public String getName() {
@@ -128,5 +106,67 @@ public class staffDto {
 
     public void setRole(role role) {
         this.role = role;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class hotelDTO {
+        private UUID id;
+        private String name;
+
+        public hotelDTO() {
+        }
+
+        public hotelDTO(UUID id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public UUID getId() {
+            return this.id;
+        }
+
+        public void setId(UUID id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class rolDTO {
+        private UUID id;
+        private String name;
+
+        public rolDTO() {
+        }
+
+        public rolDTO(UUID id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public UUID getId() {
+            return this.id;
+        }
+
+        public void setId(UUID id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
     }
 }

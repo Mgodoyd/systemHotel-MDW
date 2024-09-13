@@ -56,7 +56,7 @@ public class puestoController {
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, puesto, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 
@@ -74,7 +74,7 @@ public class puestoController {
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, puesto, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 

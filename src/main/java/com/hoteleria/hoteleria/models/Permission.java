@@ -2,6 +2,26 @@ package com.hoteleria.hoteleria.models;
 
 public enum Permission {
 
+    READ_PUESTOS,
+
+    READ_ONE_PUESTO,
+
+    SAVE_ONE_PUESTO,
+
+    UPDATE_ONE_PUESTO,
+
+    DELETE_ONE_PUESTO,
+
+    READ_HOTEL,
+
+    READ_ONE_HOTEL,
+
+    SAVE_ONE_HOTEL,
+
+    UPDATE_ONE_HOTEL,
+
+    DELETE_ONE_HOTEL,
+
     READ_ALL_USERS,
 
     READ_ONE_USER,

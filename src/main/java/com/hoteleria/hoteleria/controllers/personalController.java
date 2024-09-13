@@ -8,10 +8,12 @@ import java.util.function.Supplier;
 import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,7 +68,7 @@ public class personalController {
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, personal, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 
@@ -84,13 +86,13 @@ public class personalController {
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, personal, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 
     @PostMapping("/personals/phone")
     public ResponseEntity<responseHelper<staffDto>> findByTelefono(@RequestBody Map<String, String> requestBody) {
-        String telefono = requestBody.get("telefono");
+        String telefono = requestBody.get("phone");
 
         try {
             staffDto personal = personalService.findByTelefono(telefono);
@@ -102,11 +104,11 @@ public class personalController {
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, personal, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 
-    @PostMapping("/personals")
+    @PostMapping(value = "/personals", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<responseHelper<Object>> createPersonal(@RequestBody personal personal) {
         try {
             // Verificar si el email ya existe
@@ -126,17 +128,24 @@ public class personalController {
                                 "Rol or Hotel does not exist"));
             }
 
+            puesto rolEntity = personalService.convertToPuesto(rolOpt);
+            hotel hotelEntity = personalService.convertToHotel(hotelOpt);
+
+            // Asignar al objeto personal
+            personal.setRol(rolEntity);
+            personal.setHotel(hotelEntity);
+
             // Guardar el personal
             personal savedPersonal = personalService.save(personal);
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, savedPersonal, null));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 
-    @PutMapping("/personals")
+    @PatchMapping("/personals")
     public ResponseEntity<responseHelper<Object>> updatePersonal(@RequestBody staffDto staff) {
         staffDto exiStaffDto = personalService.findById(staff.getId()).orElse(null);
         try {
@@ -150,12 +159,13 @@ public class personalController {
                     .ok(new responseHelper<>("Success", HttpStatus.OK, personalService.updatePersonal(staff), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
         }
     }
 
     @DeleteMapping("/personals")
-    public ResponseEntity<responseHelper<Object>> deleteById(@RequestParam UUID id) {
+    public ResponseEntity<responseHelper<Object>> deleteById(@RequestBody Map<String, String> requestBody) {
+        UUID id = UUID.fromString(requestBody.get("uuid"));
         staffDto exiStaffDto = personalService.findById(id).orElse(null);
         try {
             if (exiStaffDto == null) {
@@ -177,7 +187,7 @@ public class personalController {
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, result, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 

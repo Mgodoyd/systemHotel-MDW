@@ -13,6 +13,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +26,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "personal")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class personal implements UserDetails {
 
     @Id
@@ -30,10 +35,12 @@ public class personal implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "id_puesto", nullable = false)
+    // @JsonBackReference
     private puesto rol;
 
     @ManyToOne
     @JoinColumn(name = "id_hotel", nullable = false)
+    // @JsonBackReference
     private hotel hotel;
 
     @NotBlank(message = "Name is required")
@@ -52,7 +59,7 @@ public class personal implements UserDetails {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Column(length = 12)
+    @Column(length = 200)
     private String password;
 
     @NotBlank(message = "Address is required")

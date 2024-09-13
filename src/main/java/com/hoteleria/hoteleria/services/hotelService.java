@@ -19,13 +19,13 @@ public class hotelService {
 
     public List<hotelDto> findAll() {
         return hotelinterface.findAll().stream()
-                .map(this::convertToDto)
+                .map(hotel -> convertToDto(hotel, true)) // Incluimos staff al listar todos los hoteles
                 .collect(Collectors.toList());
     }
 
     public hotelDto findByNombre(String nombre) {
         hotel hotel = hotelinterface.findByName(nombre);
-        return convertToDto(hotel);
+        return convertToDto(hotel, true);
     }
 
     public hotel save(hotel hotel) {
@@ -38,12 +38,12 @@ public class hotelService {
 
     public hotelDto findById(UUID id) {
         hotel hotel = hotelinterface.findById(id).orElse(null);
-        return convertToDto(hotel);
+        return convertToDto(hotel, true); // Pasamos un flag para excluir el staff
     }
 
     public hotelDto update(hotelDto hotelDto) {
         hotel hotel = convertToEntity(hotelDto);
-        return convertToDto(hotelinterface.save(hotel));
+        return convertToDto(hotelinterface.save(hotel), true);
     }
 
     private hotel convertToEntity(hotelDto hotelDto) {
@@ -60,7 +60,7 @@ public class hotelService {
         return hotel;
     }
 
-    private hotelDto convertToDto(hotel hotel) {
+    private hotelDto convertToDto(hotel hotel, boolean includeStaff) {
         if (hotel == null) {
             return null;
         }
@@ -71,8 +71,12 @@ public class hotelService {
         hotelDto.setPhone(hotel.getPhone());
         hotelDto.setEmail(hotel.getEmail());
         hotelDto.setDescription(hotel.getDescription());
-        hotelDto.setStaff(hotel.getStaff());
         hotelDto.setRooms(hotel.getRooms());
+
+        if (includeStaff) {
+            hotelDto.setStaff(hotel.getStaff());
+        }
+
         return hotelDto;
     }
 }

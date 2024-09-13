@@ -38,7 +38,6 @@ public class AuthenticationService {
         user.setHotel(request.getHotel());
         user.setname(request.getName());
         user.setPhone(request.getPhone());
-        ;
         user.setEmail(request.getEmail());
         user.setAddress(request.getAddress());
         user.setRole(request.getRole());

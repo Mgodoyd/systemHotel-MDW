@@ -16,8 +16,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "hotel")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties({ "staff", "hotel" })
 public class hotel {
 
     @Id
@@ -46,6 +52,7 @@ public class hotel {
     private String description;
 
     @OneToMany(mappedBy = "hotel")
+    // @JsonManagedReference
     private Set<personal> staff;
 
     @OneToMany(mappedBy = "hotel")
