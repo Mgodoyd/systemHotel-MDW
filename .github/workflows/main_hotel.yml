@@ -49,9 +49,12 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_32AB6DE1632A4AEB89A2A7B3E5425C1B }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8874FFDCB6F34549B450DEAB2F800A68 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_AA24E168863D40158C7B1808FAD5A678 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_067C0981214541E3ACC9A0FB4703B875 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A8A719F7EC4440E09B8815BE2A24BBAC }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_79CD5E5FA365430480A972CE880FA867 }}
+
+      - name: Set Java options for enable-preview
+        run: echo "JAVA_TOOL_OPTIONS=--enable-preview" >> $GITHUB_ENV
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
