@@ -53,9 +53,6 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A8A719F7EC4440E09B8815BE2A24BBAC }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_79CD5E5FA365430480A972CE880FA867 }}
 
-      - name: Set Java options for enable-preview
-        run:  "--enable-preview"
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
