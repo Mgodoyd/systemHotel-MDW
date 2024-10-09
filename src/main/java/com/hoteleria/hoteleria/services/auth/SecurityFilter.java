@@ -80,8 +80,21 @@ public class SecurityFilter {
                                                         .hasAuthority(Permission.UPDATE_ONE_PUESTO.name());
                                         authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/puestos")
                                                         .hasAuthority(Permission.DELETE_ONE_PUESTO.name());
-                                        authConfig.anyRequest().denyAll();
 
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/habitaciones")
+                                                        .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/habitaciones/number")
+                                                        .hasAuthority(Permission.READ_ONE_HABITACION.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/habitaciones/uuid")
+                                                        .hasAuthority(Permission.READ_ONE_HABITACION.name());
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/habitaciones")
+                                                        .hasAuthority(Permission.SAVE_ONE_HABITACION.name());
+                                        authConfig.requestMatchers(HttpMethod.PUT, "/api/v1/habitaciones")
+                                                        .hasAuthority(Permission.UPDATE_ONE_HABITACION.name());
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/habitaciones")
+                                                        .hasAuthority(Permission.DELETE_ONE_HABITACION.name());
+
+                                        authConfig.anyRequest().denyAll();
                                 });
 
                 return http.build();

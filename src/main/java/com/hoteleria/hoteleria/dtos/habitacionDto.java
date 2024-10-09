@@ -1,66 +1,35 @@
-package com.hoteleria.hoteleria.models;
+package com.hoteleria.hoteleria.dtos;
 
-import jakarta.persistence.*;
-
-import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import com.hoteleria.hoteleria.models.hotel;
+import com.hoteleria.hoteleria.models.promocion;
+import com.hoteleria.hoteleria.models.reservacion;
 
-@Entity
-@Table(name = "habitacion")
-public class habitación {
-
-    @Id
-    @GeneratedValue
+public class habitacionDto {
     private UUID id;
-
-    @ManyToOne
-    @JoinColumn(name = "id_hotel", nullable = false)
-    private hotel hotel;
-
-    @Column(length = 10, nullable = false)
+    private hotelDTOW hotel;
     private String numero;
-
-    @Column(length = 50)
     private String tipo;
-
-    @Column(columnDefinition = "TEXT")
     private String descripcion;
-
-    @Column(columnDefinition = "DECIMAL(10,2)")
     private Double precio;
-
-    @OneToMany(mappedBy = "habitacion")
     private Set<reservacion> reservaciones;
-
-    @OneToMany(mappedBy = "habitacion")
     private Set<promocion> promociones;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    public habitación() {
+    public habitacionDto() {
     }
 
-    public habitación(UUID id, hotel hotel, String numero, String tipo, String descripcion, Double precio,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public habitacionDto(UUID id, hotelDTOW hotel, String numero, String tipo, String descripcion, Double precio,
+            Set<reservacion> reservaciones, Set<promocion> promociones) {
         this.id = id;
         this.hotel = hotel;
         this.numero = numero;
         this.tipo = tipo;
         this.descripcion = descripcion;
         this.precio = precio;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.reservaciones = reservaciones;
+        this.promociones = promociones;
     }
 
     public UUID getId() {
@@ -71,11 +40,11 @@ public class habitación {
         this.id = id;
     }
 
-    public hotel getHotel() {
+    public hotelDTOW getHotel() {
         return this.hotel;
     }
 
-    public void setHotel(hotel hotel) {
+    public void setHotel(hotelDTOW hotel) {
         this.hotel = hotel;
     }
 
@@ -127,19 +96,23 @@ public class habitación {
         this.promociones = promociones;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
+    public static class hotelDTOW {
+        private UUID id;
+
+        public hotelDTOW() {
+        }
+
+        public hotelDTOW(UUID id) {
+            this.id = id;
+        }
+
+        public UUID getId() {
+            return this.id;
+        }
+
+        public void setId(UUID id) {
+            this.id = id;
+        }
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return this.updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }
