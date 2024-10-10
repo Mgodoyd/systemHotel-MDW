@@ -35,8 +35,8 @@ public class reservacion {
     @Column(length = 50)
     private String estado;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha_reservacion;
+    @CreationTimestamp
+    private LocalDateTime fecha_reservacion;
 
     @OneToMany(mappedBy = "reservacion")
     private Set<servicio> servicios;
@@ -56,7 +56,7 @@ public class reservacion {
     }
 
     public reservacion(UUID id, cliente cliente, habitación habitacion, Date fecha_entrada, Date fecha_salida,
-            String estado, Date fecha_reservacion, Set<servicio> servicios, Set<factura> facturas,
+            String estado, LocalDateTime fecha_reservacion, Set<servicio> servicios, Set<factura> facturas,
             LocalDateTime createdAt,
             LocalDateTime updatedAt) {
         this.id = id;
@@ -120,11 +120,11 @@ public class reservacion {
         this.estado = estado;
     }
 
-    public Date getFecha_reservacion() {
+    public LocalDateTime getFecha_reservacion() {
         return this.fecha_reservacion;
     }
 
-    public void setFecha_reservacion(Date fecha_reservacion) {
+    public void setFecha_reservacion(LocalDateTime fecha_reservacion) {
         this.fecha_reservacion = fecha_reservacion;
     }
 

@@ -1,66 +1,34 @@
-package com.hoteleria.hoteleria.models;
+package com.hoteleria.hoteleria.dtos;
 
-import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Set;
 import java.util.UUID;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import com.hoteleria.hoteleria.models.*;
 
-@Entity
-@Table(name = "clientes")
-public class cliente {
-
-    @Id
-    @GeneratedValue
+public class clienteDto {
     private UUID id;
-
-    @Column(length = 100, nullable = false)
     private String nombre;
-
-    @Column(length = 50)
     private String nit;
-
-    @Column(length = 20)
     private String telefono;
-
-    @Column(length = 100)
     private String email;
-
-    @Column(length = 255)
     private String direccion;
-
-    @OneToMany(mappedBy = "cliente")
     private Set<reservacion> reservaciones;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private role role;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    public cliente() {
+    public clienteDto() {
     }
 
-    public cliente(UUID id, String nombre, String nit, String telefono, String email, String direccion,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public clienteDto(UUID id, String nombre, String nit, String telefono, String email, String direccion,
+            Set<reservacion> reservaciones, role role) {
         this.id = id;
         this.nombre = nombre;
         this.nit = nit;
         this.telefono = telefono;
         this.email = email;
         this.direccion = direccion;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.reservaciones = reservaciones;
+        this.role = role;
     }
 
     public UUID getId() {
@@ -111,14 +79,6 @@ public class cliente {
         this.direccion = direccion;
     }
 
-    public role getRole() {
-        return this.role;
-    }
-
-    public void setRole(role role) {
-        this.role = role;
-    }
-
     public Set<reservacion> getReservaciones() {
         return this.reservaciones;
     }
@@ -127,20 +87,12 @@ public class cliente {
         this.reservaciones = reservaciones;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
+    public role getRole() {
+        return this.role;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return this.updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setRole(role role) {
+        this.role = role;
     }
 
 }

@@ -94,6 +94,41 @@ public class SecurityFilter {
                                         authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/habitaciones")
                                                         .hasAuthority(Permission.DELETE_ONE_HABITACION.name());
 
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/clientes")
+                                                        .hasAuthority(Permission.READ_ALL_USERS.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/clientes/nit")
+                                                        .hasAuthority(Permission.READ_ONE_USER.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/clientes/uuid")
+                                                        .hasAuthority(Permission.READ_ONE_USER.name());
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/clientes")
+                                                        .hasAuthority(Permission.SAVE_ONE_USER.name());
+                                        authConfig.requestMatchers(HttpMethod.PUT, "/api/v1/clientes")
+                                                        .hasAuthority(Permission.UPDATE_ONE_USER.name());
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/clientes")
+                                                        .hasAuthority(Permission.DELETE_ONE_USER.name());
+
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/reservaciones")
+                                                        .hasAuthority(Permission.READ_ALL_RESERVACIONES.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/reservaciones/id")
+                                                        .hasAuthority(Permission.READ_ONE_RESERVACION.name());
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/reservaciones")
+                                                        .hasAuthority(Permission.SAVE_ONE_RESERVACION.name());
+                                        authConfig.requestMatchers(HttpMethod.PATCH, "/api/v1/reservaciones")
+                                                        .hasAuthority(Permission.UPDATE_ONE_RESERVACION.name());
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/reservaciones")
+                                                        .hasAuthority(Permission.DELETE_ONE_RESERVACION.name());
+
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/facturas")
+                                                        .hasAuthority(Permission.READ_ALL_FACTURAS.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/facturas/id")
+                                                        .hasAuthority(Permission.READ_ONE_FACTURA.name());
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/facturas")
+                                                        .hasAuthority(Permission.SAVE_ONE_FACTURA.name());
+                                        authConfig.requestMatchers(HttpMethod.PATCH, "/api/v1/facturas")
+                                                        .hasAuthority(Permission.UPDATE_ONE_FACTURA.name());
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/facturas")
+                                                        .hasAuthority(Permission.DELETE_ONE_FACTURA.name());
+
                                         authConfig.anyRequest().denyAll();
                                 });
 
