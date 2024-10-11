@@ -153,6 +153,17 @@ public class SecurityFilter {
                                         authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/parqueos")
                                                         .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
 
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/usoInstalaciones")
+                                                        .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/usoInstalaciones/id")
+                                                        .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/usoInstalaciones")
+                                                        .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.PATCH, "/api/v1/usoInstalaciones")
+                                                        .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/usoInstalaciones")
+                                                        .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+
                                         authConfig.anyRequest().denyAll();
                                 });
 
