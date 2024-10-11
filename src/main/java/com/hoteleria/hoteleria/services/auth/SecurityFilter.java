@@ -129,6 +129,30 @@ public class SecurityFilter {
                                         authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/facturas")
                                                         .hasAuthority(Permission.DELETE_ONE_FACTURA.name());
 
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/servicios")
+                                                        .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/servicios/id")
+                                                        .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/servicios/nombre")
+                                                        .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/servicios")
+                                                        .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.PATCH, "/api/v1/servicios")
+                                                        .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/servicios")
+                                                        .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/parqueos")
+                                                        .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/parqueos/id")
+                                                        .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/parqueos")
+                                                        .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.PATCH, "/api/v1/parqueos")
+                                                        .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/parqueos")
+                                                        .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+
                                         authConfig.anyRequest().denyAll();
                                 });
 
