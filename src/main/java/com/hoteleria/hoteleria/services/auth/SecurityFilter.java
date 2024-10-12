@@ -186,6 +186,19 @@ public class SecurityFilter {
                                         authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/promociones")
                                                         .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
 
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/descuentos")
+                                                        .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/descuentos/id")
+                                                        .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.GET, "/api/v1/descuentos/codigo")
+                                                        .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.POST, "/api/v1/descuentos")
+                                                        .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.PATCH, "/api/v1/descuentos")
+                                                        .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                                        authConfig.requestMatchers(HttpMethod.DELETE, "/api/v1/descuentos")
+                                                        .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+
                                         authConfig.anyRequest().denyAll();
                                 });
 
