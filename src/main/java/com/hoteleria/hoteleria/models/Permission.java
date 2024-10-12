@@ -1,5 +1,28 @@
 package com.hoteleria.hoteleria.models;
 
+/**
+ * The Permission enum defines a set of permissions for various operations
+ * within the hotel management system. Each permission corresponds to a specific
+ * action that can be performed on different entities such as Puestos, Hotels,
+ * Users, Habitaciones, Servicios, Reservaciones, Facturas, and Huespedes.
+ * 
+ * Permissions include:
+ * - READ: Permission to read or view the entity.
+ * - READ_ONE: Permission to read or view a single instance of the entity.
+ * - SAVE_ONE: Permission to create or save a new instance of the entity.
+ * - UPDATE_ONE: Permission to update an existing instance of the entity.
+ * - DELETE_ONE: Permission to delete an existing instance of the entity.
+ * 
+ * Entities covered by these permissions:
+ * - Puestos
+ * - Hotels
+ * - Users
+ * - Habitaciones
+ * - Servicios
+ * - Reservaciones
+ * - Facturas
+ * - Huespedes
+ */
 public enum Permission {
 
     READ_PUESTOS,

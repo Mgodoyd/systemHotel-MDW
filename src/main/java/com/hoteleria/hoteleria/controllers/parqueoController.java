@@ -15,7 +15,7 @@ import com.hoteleria.hoteleria.helpers.responseHelper;
 import com.hoteleria.hoteleria.services.parqueoService;
 
 @RestController
-@CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:8100" }, methods = { RequestMethod.POST,
+@CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
         RequestMethod.GET,
         RequestMethod.DELETE,
         RequestMethod.PUT }, allowedHeaders = { "Authorization", "Content-Type" })

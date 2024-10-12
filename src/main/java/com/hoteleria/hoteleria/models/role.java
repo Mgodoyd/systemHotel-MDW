@@ -3,6 +3,10 @@ package com.hoteleria.hoteleria.models;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Enum representing different roles within the hotel management system.
+ * Each role is associated with a specific set of permissions.
+ */
 public enum role {
 
     /* permission assignment by role */

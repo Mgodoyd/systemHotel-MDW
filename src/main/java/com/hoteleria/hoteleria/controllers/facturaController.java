@@ -18,7 +18,7 @@ import com.hoteleria.hoteleria.services.facturaService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:8100" }, methods = { RequestMethod.POST,
+@CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
         RequestMethod.GET,
         RequestMethod.DELETE,
         RequestMethod.PUT }, allowedHeaders = { "Authorization", "Content-Type" })

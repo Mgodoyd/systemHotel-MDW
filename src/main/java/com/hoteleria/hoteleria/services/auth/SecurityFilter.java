@@ -107,7 +107,7 @@ public class SecurityFilter {
                                 .hasAuthority(Permission.READ_ONE_PUESTO.name());
                 auth.requestMatchers(HttpMethod.POST, "/api/v1/puestos")
                                 .hasAuthority(Permission.SAVE_ONE_PUESTO.name());
-                auth.requestMatchers(HttpMethod.PUT, "/api/v1/puestos")
+                auth.requestMatchers(HttpMethod.PATCH, "/api/v1/puestos")
                                 .hasAuthority(Permission.UPDATE_ONE_PUESTO.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/puestos")
                                 .hasAuthority(Permission.DELETE_ONE_PUESTO.name());

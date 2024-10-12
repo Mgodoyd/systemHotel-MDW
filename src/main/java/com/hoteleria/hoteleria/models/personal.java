@@ -1,6 +1,5 @@
 package com.hoteleria.hoteleria.models;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -13,17 +12,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 
+/**
+ * Represents a staff member within the hotel management system.
+ */
 @Entity
 @Table(name = "personal")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -196,6 +192,14 @@ public class personal implements UserDetails {
         return true;
     }
 
+    /**
+     * Retrieves the authorities granted to the user. This includes the permissions
+     * associated with the user's role and the role itself prefixed with "ROLE_".
+     *
+     * @return a collection of granted authorities, which includes both the
+     *         permissions
+     *         and the role of the user.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = role.getPermissions().stream().map(

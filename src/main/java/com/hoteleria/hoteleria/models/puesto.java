@@ -1,19 +1,21 @@
 package com.hoteleria.hoteleria.models;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * Represents a job position within the hotel management system.
+ * This entity is mapped to the "puesto" table in the database.
+ * 
+ */
 @Entity
 @Table(name = "puesto")
 @JsonInclude(JsonInclude.Include.NON_NULL)

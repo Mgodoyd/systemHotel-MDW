@@ -2,6 +2,11 @@ package com.hoteleria.hoteleria.dtos;
 
 import java.util.UUID;
 
+/**
+ * The puestoDto class represents a Data Transfer Object (DTO) for a job
+ * position.
+ * It contains information about the job position's unique identifier and name.
+ */
 public class puestoDto {
 
     private UUID id;
