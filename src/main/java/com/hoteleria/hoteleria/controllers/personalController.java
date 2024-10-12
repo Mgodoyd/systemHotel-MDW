@@ -5,186 +5,108 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
-import com.hoteleria.hoteleria.dtos.hotelDto;
-import com.hoteleria.hoteleria.dtos.puestoDto;
 import com.hoteleria.hoteleria.dtos.staffDto;
 import com.hoteleria.hoteleria.helpers.responseHelper;
-import com.hoteleria.hoteleria.models.hotel;
-import com.hoteleria.hoteleria.models.personal;
-import com.hoteleria.hoteleria.models.puesto;
 import com.hoteleria.hoteleria.services.*;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
         RequestMethod.GET,
         RequestMethod.DELETE,
-        RequestMethod.PUT }, allowedHeaders = { "Authorization", "Content-Type" })
+        RequestMethod.PATCH }, allowedHeaders = { "Authorization", "Content-Type" })
 @RequestMapping("/api/v1")
 public class personalController {
 
     @Autowired
     private personalService personalService;
 
-    @Autowired
-    private puestoService rolService;
-
-    @Autowired
-    private hotelService hotelService;
-
-    @GetMapping("/personals")
+    @GetMapping("/personals") // get all personals
     public ResponseEntity<responseHelper<List<staffDto>>> getAllPersonal() {
         return handleResponse(() -> personalService.getAllPersonal());
     }
 
-    @PostMapping("/personals/email")
+    @PostMapping("/personals/email") // find a personal by email
     public ResponseEntity<responseHelper<staffDto>> findByEmail(@RequestBody Map<String, String> requestBody) {
         String email = requestBody.get("email");
-
-        try {
+        return handleResponse(() -> {
             staffDto personal = personalService.findByEmail(email).orElse(null);
             if (personal == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Empleado does not exist"));
+                throw new RuntimeException("Empleado does not exist");
             }
-
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, personal, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+            return personal;
+        });
     }
 
-    @PostMapping("/personals/uuid")
+    @PostMapping("/personals/uuid") // find a personal by id
     public ResponseEntity<responseHelper<staffDto>> findById(@RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("uuid"));
-        staffDto personal = personalService.findById(id).orElse(null);
-
-        try {
+        return handleResponse(() -> {
+            staffDto personal = personalService.findById(id).orElse(null);
             if (personal == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Empleado does not exist"));
+                throw new RuntimeException("Empleado does not exist");
             }
-
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, personal, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+            return personal;
+        });
     }
 
-    @PostMapping("/personals/phone")
+    @PostMapping("/personals/phone") // find a personal by phone
     public ResponseEntity<responseHelper<staffDto>> findByTelefono(@RequestBody Map<String, String> requestBody) {
         String telefono = requestBody.get("phone");
-
-        try {
-            staffDto personal = personalService.findByTelefono(telefono);
+        return handleResponse(() -> {
+            staffDto personal = personalService.findByTelefono(telefono).orElse(null);
             if (personal == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Empleado does not exist"));
+                throw new RuntimeException("Empleado does not exist");
             }
-
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, personal, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+            return personal;
+        });
     }
 
-    @PostMapping(value = "/personals", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<responseHelper<Object>> createPersonal(@RequestBody personal personal) {
-        try {
-            // Verificar si el email ya existe
+    @PostMapping("/personals") // create a personal
+    public ResponseEntity<responseHelper<staffDto>> createPersonal(@RequestBody staffDto personal) {
+        return handleResponse(() -> {
             staffDto exiStaffDto = personalService.findByEmail(personal.getEmail()).orElse(null);
             if (exiStaffDto != null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Empleado already exists"));
+                throw new RuntimeException("Empleado already exists");
             }
-
-            // Verificar si el rol y el hotel existen
-            puestoDto rolOpt = rolService.findById(personal.getRol().getId());
-            hotelDto hotelOpt = hotelService.findById(personal.getHotel().getId());
-
-            if (rolOpt == null || hotelOpt == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null,
-                                "Rol or Hotel does not exist"));
-            }
-
-            puesto rolEntity = personalService.convertToPuesto(rolOpt);
-            hotel hotelEntity = personalService.convertToHotel(hotelOpt);
-
-            // Asignar al objeto personal
-            personal.setRol(rolEntity);
-            personal.setHotel(hotelEntity);
-
-            // Guardar el personal
-            personal savedPersonal = personalService.save(personal);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, savedPersonal, null));
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+            return personalService.save(personal);
+        });
     }
 
-    @PatchMapping("/personals")
+    @PatchMapping("/personals") // update a personal
     public ResponseEntity<responseHelper<Object>> updatePersonal(@RequestBody staffDto staff) {
-        staffDto exiStaffDto = personalService.findById(staff.getId()).orElse(null);
-        try {
-
+        return handleResponse(() -> {
+            staffDto exiStaffDto = personalService.findById(staff.getId()).orElse(null);
             if (exiStaffDto == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Empleado does not exist"));
+                throw new RuntimeException("Empleado does not exist");
             }
-
-            return ResponseEntity
-                    .ok(new responseHelper<>("Success", HttpStatus.OK, personalService.updatePersonal(staff), null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
-        }
+            return personalService.updatePersonal(staff);
+        });
     }
 
-    @DeleteMapping("/personals")
+    @DeleteMapping("/personals") // delete a personal
     public ResponseEntity<responseHelper<Object>> deleteById(@RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("uuid"));
-        staffDto exiStaffDto = personalService.findById(id).orElse(null);
-        try {
+        return handleResponse(() -> {
+            staffDto exiStaffDto = personalService.findById(id).orElse(null);
             if (exiStaffDto == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Empleado does not exist"));
+                throw new RuntimeException("Empleado does not exist");
             }
-
-            return ResponseEntity
-                    .ok(new responseHelper<>("Success", HttpStatus.OK, personalService.deleteById(id), null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+            return personalService.deleteById(id);
+        });
     }
 
+    // Helper method to handle responses
     private <T> ResponseEntity<responseHelper<T>> handleResponse(Supplier<T> action) {
         try {
             T result = action.get();
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, result, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));

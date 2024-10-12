@@ -34,29 +34,37 @@ public class personalService {
     }
 
     public Optional<staffDto> findByEmail(String email) {
-        return personalRepository.findByEmail(email)
-                .map(this::convertDTOStaff);
+        Optional<personal> personalExist = personalRepository.findByEmail(email);
+        if (personalExist.isPresent()) {
+            return Optional.of(convertDTOStaff(personalExist.get()));
+        }
+
+        return Optional.empty();
+
     }
 
     public Optional<staffDto> findById(UUID id) {
         Optional<personal> personalExist = personalRepository.findById(id);
-        if (personalExist == null) {
-            return null;
+        if (personalExist.isPresent()) {
+            return Optional.of(convertDTOStaff(personalExist.get()));
         }
-        return Optional.of(convertDTOStaff(personalExist.get()));
+
+        return Optional.empty();
     }
 
-    public staffDto findByTelefono(String phone) {
-        personal personalExist = personalRepository.findByPhone(phone);
-        if (personalExist == null) {
-            return null;
+    public Optional<staffDto> findByTelefono(String phone) {
+        Optional<personal> personalExist = personalRepository.findByPhone(phone);
+        if (personalExist.isPresent()) {
+            return Optional.of(convertDTOStaff(personalExist.get()));
         }
-        return convertDTOStaff(personalExist);
+
+        return Optional.empty();
     }
 
-    public personal save(personal personal) {
+    public staffDto save(staffDto staff) {
+        personal personal = convertToEntity(staff);
         personal.setPassword(passwordEncoder.encode(personal.getPassword()));
-        return personalRepository.save(personal);
+        return convertDTOStaff(personalRepository.save(personal));
     }
 
     public staffDto updatePersonal(staffDto staff) {
@@ -65,30 +73,32 @@ public class personalService {
     }
 
     private personal convertToEntity(staffDto staff) {
-        personal personal = new personal();
-        personal.setId(staff.getId());
-        personal.setname(staff.getName());
-        personal.setPhone(staff.getPhone());
-        personal.setEmail(staff.getEmail());
-        personal.setPassword(staff.getPassword());
-        personal.setAddress(staff.getAddress());
-        personal.setRole(staff.getRole());
+        personal.Builder personalBuilder = new personal.Builder(staff.getId())
+                .name(staff.getName())
+                .phone(staff.getPhone())
+                .email(staff.getEmail())
+                .password(staff.getPassword())
+                .address(staff.getAddress());
 
         if (staff.getHotel() != null) {
             hotel hotel = new hotel();
             hotel.setId(staff.getHotel().getId());
             hotel.setName(staff.getHotel().getName());
-            personal.setHotel(hotel);
+            personalBuilder.hotel(hotel);
         }
 
         if (staff.getRol() != null) {
             puesto puesto = new puesto();
             puesto.setId(staff.getRol().getId());
             puesto.setName(staff.getRol().getName());
-            personal.setRol(puesto);
+            personalBuilder.rol(puesto);
         }
 
-        return personal;
+        if (staff.getRole() != null) {
+            personalBuilder.role(staff.getRole());
+        }
+
+        return personalBuilder.build();
     }
 
     public puesto convertToPuesto(puestoDto dto) {
@@ -136,13 +146,11 @@ public class personalService {
         staff.setPassword(personal.getPassword());
         staff.setAddress(personal.getAddress());
 
-        // Convertir hotel
         staffDto.hotelDTO hotel = new staffDto.hotelDTO();
         hotel.setId(personal.getHotel().getId());
         hotel.setName(personal.getHotel().getName());
         staff.setHotel(hotel);
 
-        // Convertir rol
         staffDto.rolDTO rol = new staffDto.rolDTO();
         rol.setId(personal.getRol().getId());
         rol.setName(personal.getRol().getName());

@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Authentication service
@@ -47,15 +48,16 @@ public class AuthenticationService {
      * @return the registered personal user
      */
     public personal register(personal request) {
-        var user = new personal();
-        user.setRol(request.getRol());
-        user.setHotel(request.getHotel());
-        user.setname(request.getName());
-        user.setPhone(request.getPhone());
-        user.setEmail(request.getEmail());
-        user.setAddress(request.getAddress());
-        user.setRole(request.getRole());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        personal user = new personal.Builder(UUID.randomUUID())
+                .rol(request.getRol())
+                .hotel(request.getHotel())
+                .name(request.getName())
+                .phone(request.getPhone())
+                .email(request.getEmail())
+                .address(request.getAddress())
+                .role(request.getRole())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .build();
         return userRepository.save(user);
     }
 

@@ -17,9 +17,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-/**
- * Represents a staff member within the hotel management system.
- */
 @Entity
 @Table(name = "personal")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -31,12 +28,10 @@ public class personal implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "id_puesto", nullable = false)
-    // @JsonBackReference
     private puesto rol;
 
     @ManyToOne
     @JoinColumn(name = "id_hotel", nullable = false)
-    // @JsonBackReference
     private hotel hotel;
 
     @NotBlank(message = "Name is required")
@@ -75,77 +70,115 @@ public class personal implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // Constructor por defecto requerido por Hibernate
     public personal() {
     }
 
-    public personal(UUID id, puesto puesto, hotel hotel, String name, String password, String phone, String email,
-            String address, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.rol = puesto;
-        this.hotel = hotel;
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.password = password;
-        this.address = address;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    // Constructor con el patrón Builder
+    private personal(Builder builder) {
+        this.id = builder.id;
+        this.rol = builder.rol;
+        this.hotel = builder.hotel;
+        this.name = builder.name;
+        this.phone = builder.phone;
+        this.email = builder.email;
+        this.password = builder.password;
+        this.address = builder.address;
+        this.role = builder.role;
+        this.createdAt = builder.createdAt;
+        this.updatedAt = builder.updatedAt;
     }
 
+    // Clase Builder
+    public static class Builder {
+        private UUID id;
+        private puesto rol;
+        private hotel hotel;
+        private String name;
+        private String phone;
+        private String email;
+        private String password;
+        private String address;
+        private role role;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        public Builder(UUID id) {
+            this.id = id;
+        }
+
+        public Builder rol(puesto rol) {
+            this.rol = rol;
+            return this;
+        }
+
+        public Builder hotel(hotel hotel) {
+            this.hotel = hotel;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder phone(String phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder address(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Builder role(role role) {
+            this.role = role;
+            return this;
+        }
+
+        public personal build() {
+            return new personal(this);
+        }
+    }
+
+    // Getters y Setters
     public UUID getId() {
         return this.id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public puesto getRol() {
         return this.rol;
     }
 
-    public void setRol(puesto rol) {
-        this.rol = rol;
-    }
-
     public hotel getHotel() {
         return this.hotel;
-    }
-
-    public void setHotel(hotel hotel) {
-        this.hotel = hotel;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public void setname(String name) {
-        this.name = name;
-    }
-
     public String getPhone() {
         return this.phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getEmail() {
         return this.email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public role getRole() {
         return this.role;
-    }
-
-    public void setRole(role role) {
-        this.role = role;
     }
 
     public String getPassword() {
@@ -160,10 +193,6 @@ public class personal implements UserDetails {
         return this.address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public LocalDateTime getCreatedAt() {
         return this.createdAt;
     }
@@ -172,6 +201,7 @@ public class personal implements UserDetails {
         return this.updatedAt;
     }
 
+    // Métodos de UserDetails
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -192,21 +222,13 @@ public class personal implements UserDetails {
         return true;
     }
 
-    /**
-     * Retrieves the authorities granted to the user. This includes the permissions
-     * associated with the user's role and the role itself prefixed with "ROLE_".
-     *
-     * @return a collection of granted authorities, which includes both the
-     *         permissions
-     *         and the role of the user.
-     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = role.getPermissions().stream().map(
-                permissionEnum -> new SimpleGrantedAuthority(permissionEnum.name())).collect(Collectors.toList());
+        List<GrantedAuthority> authorities = role.getPermissions().stream()
+                .map(permissionEnum -> new SimpleGrantedAuthority(permissionEnum.name()))
+                .collect(Collectors.toList());
 
         authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
-
         return authorities;
     }
 
@@ -214,5 +236,4 @@ public class personal implements UserDetails {
     public String getUsername() {
         return getEmail();
     }
-
 }
