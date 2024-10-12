@@ -1,5 +1,8 @@
 package com.hoteleria.hoteleria.services.auth;
 
+/**
+ * AuthenticationRequest
+ */
 public class AuthenticationRequest {
 
     private String email;

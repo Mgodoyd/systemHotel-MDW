@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Authentication service
+ */
 @Service
 public class AuthenticationService {
 
@@ -28,10 +31,21 @@ public class AuthenticationService {
 
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Constructs an AuthenticationService with the specified PasswordEncoder.
+     *
+     * @param passwordEncoder the PasswordEncoder to be used for encoding passwords
+     */
     public AuthenticationService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Registers a new personal user with the provided details.
+     *
+     * @param request the personal user details to register
+     * @return the registered personal user
+     */
     public personal register(personal request) {
         var user = new personal();
         user.setRol(request.getRol());
@@ -45,6 +59,14 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
+    /**
+     * Authenticates a user based on the provided authentication request.
+     * 
+     * @param authenticationRequest the request containing the user's email and
+     *                              password
+     * @return an AuthenticationResponse containing the JWT token and its expiration
+     *         time in minutes
+     */
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 authenticationRequest.getEmailString(), authenticationRequest.getPassword());
@@ -57,6 +79,12 @@ public class AuthenticationService {
         return new AuthenticationResponse(expirationTimeMinutes, jwt);
     }
 
+    /**
+     * Generates a map of extra claims for a given user.
+     *
+     * @param user the user for whom the extra claims are generated
+     * @return a map containing the extra claims, including the user's name and role
+     */
     private Map<String, Object> generateExtraClaims(personal user) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("name", user.getName());

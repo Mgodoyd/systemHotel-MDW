@@ -30,6 +30,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private personalInterface userRepository;
 
+    /**
+     * Filters incoming HTTP requests to validate JWT tokens and authenticate users.
+     *
+     * @param request     the HTTP request
+     * @param response    the HTTP response
+     * @param filterChain the filter chain
+     * @throws ServletException if an error occurs during the filtering process
+     * @throws IOException      if an I/O error occurs during the filtering process
+     *
+     *                          This method performs the following steps:
+     *                          1. Retrieves the "Authorization" header from the
+     *                          request.
+     *                          2. Checks if the header is present and starts with
+     *                          "Bearer ".
+     *                          3. Extracts the JWT token from the header.
+     *                          4. Validates the JWT token using the jwtService.
+     *                          5. Extracts the username from the JWT token.
+     *                          6. Retrieves the user details from the
+     *                          userRepository using the extracted username.
+     *                          7. Creates an authentication token and sets it in
+     *                          the SecurityContext.
+     *                          8. Handles any exceptions by returning an error
+     *                          response with HTTP status 401 (Unauthorized).
+     *                          9. Continues the filter chain if the JWT token is
+     *                          valid and the user is authenticated.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {

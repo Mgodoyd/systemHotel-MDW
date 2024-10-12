@@ -1,5 +1,8 @@
 package com.hoteleria.hoteleria.services.auth;
 
+/**
+ * AuthenticationResponse
+ */
 public class AuthenticationResponse {
 
     private String jwt;
