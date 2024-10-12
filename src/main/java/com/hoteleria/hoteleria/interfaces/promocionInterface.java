@@ -7,6 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import com.hoteleria.hoteleria.models.promocion;
 
+/**
+ * Repository interface for managing {@link promocion} entities.
+ * Extends {@link JpaRepository} to provide CRUD operations.
+ * 
+ * @see JpaRepository
+ */
 @Repository
 public interface promocionInterface extends JpaRepository<promocion, UUID> {
 

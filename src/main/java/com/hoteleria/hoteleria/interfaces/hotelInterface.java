@@ -8,6 +8,14 @@ import org.springframework.stereotype.Repository;
 
 import com.hoteleria.hoteleria.models.hotel;
 
+/**
+ * Repository interface for managing Hotel entities.
+ * Extends JpaRepository to provide CRUD operations and additional query
+ * methods.
+ * 
+ * @see org.springframework.data.jpa.repository.JpaRepository
+ * 
+ */
 @Repository
 public interface hotelInterface extends JpaRepository<hotel, UUID> {
 
