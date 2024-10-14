@@ -81,10 +81,11 @@ public class personalService {
                 .address(staff.getAddress());
 
         if (staff.getHotel() != null) {
-            hotel hotel = new hotel();
-            hotel.setId(staff.getHotel().getId());
-            hotel.setName(staff.getHotel().getName());
-            personalBuilder.hotel(hotel);
+            hotel hotelnew = new hotel.Builder()
+                    .id(staff.getHotel().getId())
+                    .name(staff.getHotel().getName())
+                    .build();
+            personalBuilder.hotel(hotelnew);
         }
 
         if (staff.getRol() != null) {
@@ -110,13 +111,13 @@ public class personalService {
     }
 
     public hotel convertToHotel(hotelDto dto) {
-        hotel entity = new hotel();
-        entity.setId(dto.getId());
-        entity.setName(dto.getName());
-        entity.setAddress(dto.getAddress());
-        entity.setPhone(dto.getPhone());
-        entity.setEmail(dto.getEmail());
-        return entity;
+        return new hotel.Builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .address(dto.getAddress())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .build();
     }
 
     public Boolean deleteById(UUID id) {

@@ -5,11 +5,9 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
-import com.hoteleria.hoteleria.models.cliente;
-import com.hoteleria.hoteleria.models.factura;
-import com.hoteleria.hoteleria.models.habitación;
-import com.hoteleria.hoteleria.models.servicio;
+import com.hoteleria.hoteleria.models.*;
 
+/* Dto class reservacion */
 public class reservacionDto {
     private UUID id;
     private clienteDTO cliente;

@@ -1,11 +1,11 @@
 package com.hoteleria.hoteleria.dtos;
 
-import java.sql.Date;
 import java.util.Set;
 import java.util.UUID;
 
 import com.hoteleria.hoteleria.models.*;
 
+/* Dto class cliente */
 public class clienteDto {
     private UUID id;
     private String nombre;

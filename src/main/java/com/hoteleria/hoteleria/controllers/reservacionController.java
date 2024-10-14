@@ -6,8 +6,8 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.hoteleria.hoteleria.dtos.reservacionDto;
@@ -32,72 +32,56 @@ public class reservacionController {
         return handleResponse(() -> reservacionService.getAll());
     }
 
-    @GetMapping("/reservaciones/id") // get reservacion by id
+    @GetMapping("/reservaciones/id") // Get reservacion by id
     public ResponseEntity<responseHelper<reservacionDto>> getReservacionById(
             @RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("id"));
-
-        reservacionDto reservacion = reservacionService.getById(id);
-        if (reservacion == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null,
-                            "Reservacion does not exist"));
-        }
-
-        return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, reservacion, null));
+        return handleResponse(() -> {
+            reservacionDto reservacion = reservacionService.getById(id);
+            if (reservacion == null) {
+                throw new ResourceNotFoundException("Reservacion does not exist");
+            }
+            return reservacion;
+        });
     }
 
-    @PostMapping("/reservaciones") // save reservacion
+    @PostMapping("/reservaciones") // Save reservacion
     public ResponseEntity<responseHelper<reservacionDto>> saveReservacion(@Valid @RequestBody reservacion reservacion) {
-        try {
-            reservacionDto newreservacion = reservacionService.save(reservacion);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, newreservacion, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+        return handleResponse(() -> reservacionService.save(reservacion));
     }
 
-    @PatchMapping("/reservaciones") // update reservacion
+    @PatchMapping("/reservaciones") // Update reservacion
     public ResponseEntity<responseHelper<reservacionDto>> updateReservacion(
             @Valid @RequestBody reservacionDto reservacion) {
-        try {
+        return handleResponse(() -> {
             reservacionService.update(reservacion);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, reservacion, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+            return reservacion; // or return updated reservacionDto if needed
+        });
     }
 
-    @DeleteMapping("/reservaciones") // delete reservacion
+    @DeleteMapping("/reservaciones") // Delete reservacion
     public ResponseEntity<responseHelper<Boolean>> deleteReservacion(@RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("id"));
-
-        reservacionDto reservacion = reservacionService.getById(id);
-
-        try {
+        return handleResponse(() -> {
+            reservacionDto reservacion = reservacionService.getById(id);
             if (reservacion == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, false,
-                                "Reservacion does not exist"));
+                throw new ResourceNotFoundException("Reservacion does not exist");
             }
-
             reservacionService.delete(id);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, true, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, false, e.getMessage()));
-        }
+            return true;
+        });
     }
 
     private <T> ResponseEntity<responseHelper<T>> handleResponse(Supplier<T> action) {
         try {
             T result = action.get();
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, result, null));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new responseHelper<>("Error", HttpStatus.NOT_FOUND, null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 }

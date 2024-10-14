@@ -32,7 +32,7 @@ public class promocion {
     @Column(length = 50)
     private String tipo_servicio;
 
-    @OneToMany(mappedBy = "promocion")
+    @OneToMany(mappedBy = "promocion", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<descuentos> descuentos;
 
     @CreationTimestamp

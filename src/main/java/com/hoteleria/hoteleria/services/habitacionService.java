@@ -1,7 +1,6 @@
 package com.hoteleria.hoteleria.services;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.hoteleria.hoteleria.dtos.habitacionDto;
 import com.hoteleria.hoteleria.dtos.habitacionDto.hotelDTOW;
-import com.hoteleria.hoteleria.dtos.hotelDto;
 import com.hoteleria.hoteleria.interfaces.habitacionInterface;
-import com.hoteleria.hoteleria.models.habitación;
-import com.hoteleria.hoteleria.models.hotel;
-
-import jakarta.validation.Valid;
+import com.hoteleria.hoteleria.models.*;
 
 @Service
 public class habitacionService {
@@ -22,15 +17,19 @@ public class habitacionService {
     @Autowired
     private habitacionInterface habitacionInterface;
 
-    // Método para convertir de Entidad a DTO
+    /**
+     * Converts a habitacion entity to a habitacionDto.
+     *
+     * @param habitacion the habitacion entity to be converted
+     * @return the converted habitacionDto
+     */
     private habitacionDto convertToDto(habitación habitacion) {
         habitacionDto dto = new habitacionDto();
         dto.setId(habitacion.getId());
 
-        // Crear DTO para hotel y asignar solo el ID
         hotelDTOW hotelDto = new hotelDTOW();
         hotelDto.setId(habitacion.getHotel().getId());
-        dto.setHotel(hotelDto); // Asignar el DTO del hotel a la habitación
+        dto.setHotel(hotelDto);
 
         dto.setNumero(habitacion.getNumero());
         dto.setTipo(habitacion.getTipo());
@@ -42,58 +41,93 @@ public class habitacionService {
         return dto;
     }
 
-    // Método para convertir de DTO a Entidad
+    /**
+     * Converts a habitacionDto object to a habitación entity.
+     *
+     * @param dto the habitacionDto object to be converted
+     * @return the converted habitación entity
+     */
     private habitación convertToEntity(habitacionDto dto) {
-        habitación habitacion = new habitación();
-        habitacion.setId(dto.getId());
-
-        // Convertir hotelDTO a hotel entidad y asignar
-        hotel hotel = new hotel();
-        hotel.setId(dto.getHotel().getId());
-        habitacion.setHotel(hotel);
-
-        habitacion.setNumero(dto.getNumero());
-        habitacion.setTipo(dto.getTipo());
-        habitacion.setDescripcion(dto.getDescripcion());
-        habitacion.setPrecio(dto.getPrecio());
-        habitacion.setReservaciones(dto.getReservaciones());
-        habitacion.setPromociones(dto.getPromociones());
-
-        return habitacion;
+        return new habitación.Builder()
+                .id(dto.getId())
+                .hotel(new hotel.Builder().id(dto.getHotel().getId()).build())
+                .numero(dto.getNumero())
+                .tipo(dto.getTipo())
+                .descripcion(dto.getDescripcion())
+                .precio(dto.getPrecio())
+                .build();
     }
 
-    // Encontrar todas las habitaciones y convertirlas a DTO
+    /**
+     * Retrieves a list of all habitacionDto objects.
+     *
+     * @return a list of habitacionDto objects converted from the list of habitación
+     *         entities.
+     */
     public List<habitacionDto> findAll() {
         List<habitación> habitaciones = habitacionInterface.findAll();
         return habitaciones.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-    // Encontrar habitación por número y devolver DTO
+    /**
+     * Finds a habitacion by its numero.
+     *
+     * @param numero the numero of the habitacion to find
+     * @return the habitacionDto corresponding to the found habitacion
+     */
     public habitacionDto findByNumero(String numero) {
-        habitación habitacion = habitacionInterface.findByNumero(numero);
-        return convertToDto(habitacion);
+        Optional<habitación> habitacion = habitacionInterface.findByNumero(numero);
+        if (habitacion.isPresent()) {
+            return convertToDto(habitacion.get());
+        }
+
+        return null;
     }
 
-    // Encontrar habitación por ID y devolver DTO
+    /**
+     * Finds a habitacion by its unique identifier.
+     *
+     * @param id the unique identifier of the habitacion
+     * @return a habitacionDto object if the habitacion is found, otherwise null
+     */
     public habitacionDto findById(UUID id) {
-        habitación habitacion = habitacionInterface.findById(id).orElse(null);
-        return habitacion != null ? convertToDto(habitacion) : null;
+        Optional<habitación> habitacion = habitacionInterface.findById(id);
+        if (habitacion.isPresent()) {
+            return convertToDto(habitacion.get());
+        }
+
+        return null;
     }
 
-    // Guardar o actualizar una habitación usando DTO
-    public void save(habitación habitación) {
-        habitacionInterface.save(habitación);
-    }
-
-    // Actualizar habitación usando DTO
-    public void update(habitacionDto habitacionDto) {
+    /**
+     * Saves the given habitación object using the habitacionInterface.
+     *
+     * @param habitación the habitación object to be saved
+     */
+    public habitacionDto save(habitacionDto habitacionDto) {
         habitación habitacion = convertToEntity(habitacionDto);
-        habitacionInterface.save(habitacion);
+        habitación savedHabitacion = habitacionInterface.save(habitacion);
+        return convertToDto(savedHabitacion);
     }
 
-    // Borrar habitación por ID
+    /**
+     * Updates an existing habitacion entity with the provided habitacionDto data.
+     *
+     * @param habitacionDto the data transfer object containing the updated
+     *                      information
+     */
+    public habitacionDto update(habitacionDto habitacionDto) {
+        habitación habitacion = convertToEntity(habitacionDto);
+        habitación updatedHabitacion = habitacionInterface.save(habitacion);
+        return convertToDto(updatedHabitacion);
+    }
+
     public boolean deleteById(UUID id) {
-        habitacionInterface.deleteById(id);
+        habitación habitacion = habitacionInterface.findById(id).orElse(null);
+        if (habitacion == null) {
+            return false;
+        }
+        habitacionInterface.delete(habitacion);
         return true;
     }
 }

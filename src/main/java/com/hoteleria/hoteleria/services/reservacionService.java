@@ -8,22 +8,23 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hoteleria.hoteleria.dtos.clienteDto;
-import com.hoteleria.hoteleria.dtos.habitacionDto;
 import com.hoteleria.hoteleria.dtos.reservacionDto;
 import com.hoteleria.hoteleria.dtos.reservacionDto.clienteDTO;
 import com.hoteleria.hoteleria.dtos.reservacionDto.habitacionDTO;
 import com.hoteleria.hoteleria.interfaces.reservacionInterface;
-import com.hoteleria.hoteleria.models.cliente;
-import com.hoteleria.hoteleria.models.habitación;
-import com.hoteleria.hoteleria.models.reservacion;
+import com.hoteleria.hoteleria.models.*;
 
 @Service
 public class reservacionService {
     @Autowired
     private reservacionInterface reservacionInterface;
 
-    // Método para convertir de entidad a DTO
+    /**
+     * Converts a reservacion entity to a reservacionDto.
+     *
+     * @param reservacion the reservacion entity to convert
+     * @return the converted reservacionDto
+     */
     private reservacionDto convertToDto(reservacion reservacion) {
         reservacionDto dto = new reservacionDto();
         dto.setId(reservacion.getId());
@@ -50,21 +51,27 @@ public class reservacionService {
         return dto;
     }
 
-    // Método para convertir de DTO a entidad
+    /**
+     * Converts a reservacionDto object to a reservacion entity.
+     *
+     * @param dto the reservacionDto object to be converted
+     * @return the converted reservacion entity
+     */
     private reservacion convertToEntity(reservacionDto dto) {
         reservacion reservacion = new reservacion();
         reservacion.setId(dto.getId());
 
-        cliente cliente = new cliente();
-        cliente.setId(dto.getCliente().getId());
-        cliente.setNombre(dto.getCliente().getNombre());
-        cliente.setNit(dto.getCliente().getNit());
-        reservacion.setCliente(cliente);
+        cliente.Builder cliente = new cliente.Builder()
+                .id(dto.getCliente().getId())
+                .nombre(dto.getCliente().getNombre())
+                .nit(dto.getCliente().getNit());
+        reservacion.setCliente(cliente.build());
 
-        habitación habitacion = new habitación();
-        habitacion.setId(dto.getHabitacion().getId());
-        habitacion.setNumero(dto.getHabitacion().getNumero());
-        habitacion.setTipo(dto.getHabitacion().getTipo());
+        habitación habitacion = new habitación.Builder()
+                .id(dto.getHabitacion().getId())
+                .numero(dto.getHabitacion().getNumero())
+                .tipo(dto.getHabitacion().getTipo())
+                .build();
         reservacion.setHabitacion(habitacion);
 
         reservacion.setFecha_reservacion(dto.getFecha_reservacion());
@@ -77,10 +84,21 @@ public class reservacionService {
         return reservacion;
     }
 
+    /**
+     * Retrieves all reservations and converts them to DTOs.
+     *
+     * @return a list of reservation DTOs.
+     */
     public List<reservacionDto> getAll() {
         return reservacionInterface.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a reservation by its unique identifier.
+     *
+     * @param id the unique identifier of the reservation
+     * @return the reservation data transfer object if found, otherwise null
+     */
     public reservacionDto getById(UUID id) {
         Optional<reservacion> reservacionOpt = reservacionInterface.findById(id);
         if (reservacionOpt.isPresent()) {
@@ -90,11 +108,24 @@ public class reservacionService {
         }
     }
 
+    /**
+     * Saves a given reservacion entity and returns its corresponding DTO.
+     *
+     * @param reservacion the reservacion entity to be saved
+     * @return the DTO representation of the saved reservacion entity
+     */
     public reservacionDto save(reservacion reservacion) {
         reservacion savedReservacion = reservacionInterface.save(reservacion);
         return convertToDto(savedReservacion);
     }
 
+    /**
+     * Deletes a reservation by its unique identifier.
+     *
+     * @param id the unique identifier of the reservation to be deleted
+     * @return true if the reservation was successfully deleted, false if the
+     *         reservation does not exist
+     */
     public boolean delete(UUID id) {
         if (reservacionInterface.existsById(id)) {
             reservacionInterface.deleteById(id);
@@ -103,6 +134,12 @@ public class reservacionService {
         return false;
     }
 
+    /**
+     * Updates an existing reservation with the provided reservation data transfer
+     * object (DTO).
+     *
+     * @param reservacionDto the reservation DTO containing the updated information
+     */
     public void update(reservacionDto reservacionDto) {
         reservacion reservacion = convertToEntity(reservacionDto);
         reservacionInterface.save(reservacion);

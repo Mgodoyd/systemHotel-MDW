@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.hoteleria.hoteleria.models.habitación;
 import com.hoteleria.hoteleria.models.personal;
 
+/* Dto class hotel  */
 public class hotelDto {
     private UUID id;
     private String name;

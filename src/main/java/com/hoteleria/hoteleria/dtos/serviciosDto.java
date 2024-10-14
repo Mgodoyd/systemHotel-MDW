@@ -3,6 +3,7 @@ package com.hoteleria.hoteleria.dtos;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/* Dto class servicios */
 public class serviciosDto {
 
     private UUID id;

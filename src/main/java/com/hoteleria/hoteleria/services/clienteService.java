@@ -1,6 +1,7 @@
 package com.hoteleria.hoteleria.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,12 @@ public class clienteService {
     @Autowired
     private clienteInterface clienteInterface;
 
+    /**
+     * Converts a {@link cliente} entity to a {@link clienteDto}.
+     *
+     * @param cliente the {@link cliente} entity to convert
+     * @return the converted {@link clienteDto}
+     */
     private clienteDto convertToDto(cliente cliente) {
         clienteDto dto = new clienteDto();
         dto.setId(cliente.getId());
@@ -30,35 +37,76 @@ public class clienteService {
         return dto;
     }
 
+    /**
+     * Converts a clienteDto object to a cliente entity.
+     *
+     * @param dto the clienteDto object to be converted
+     * @return a cliente entity built from the provided dto
+     */
     private cliente convertToEntity(clienteDto dto) {
-        cliente cliente = new cliente();
-        cliente.setId(dto.getId());
-        cliente.setNombre(dto.getNombre());
-        cliente.setNit(dto.getNit());
-        cliente.setDireccion(dto.getDireccion());
-        cliente.setTelefono(dto.getTelefono());
-        cliente.setEmail(dto.getEmail());
-        cliente.setRole(dto.getRole());
-        cliente.setReservaciones(dto.getReservaciones());
-        return cliente;
+        return new cliente.Builder()
+                .id(dto.getId())
+                .nombre(dto.getNombre())
+                .nit(dto.getNit())
+                .telefono(dto.getTelefono())
+                .email(dto.getEmail())
+                .direccion(dto.getDireccion())
+                .role(dto.getRole())
+                .reservaciones(dto.getReservaciones())
+                .build();
+
     }
 
+    /**
+     * Retrieves all clients and converts them to DTOs.
+     *
+     * @return a list of client DTOs.
+     */
     public List<clienteDto> getAll() {
         return clienteInterface.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a clienteDto object by its unique identifier.
+     *
+     * @param id the unique identifier of the cliente to retrieve
+     * @return the clienteDto object if found, otherwise null
+     */
     public clienteDto getById(UUID id) {
-        return convertToDto(clienteInterface.findById(id).get());
+        Optional<cliente> cliente = clienteInterface.findById(id);
+        if (cliente.isPresent()) {
+            return convertToDto(cliente.get());
+        }
+        return null;
     }
 
     public clienteDto getByNit(String nit) {
-        return convertToDto(clienteInterface.findByNit(nit));
+        Optional<cliente> cliente = clienteInterface.findByNit(nit);
+        if (cliente.isPresent()) {
+            return convertToDto(cliente.get());
+        }
+
+        return null;
     }
 
-    public void save(cliente clienteDto) {
-        clienteInterface.save(clienteDto);
+    /**
+     * Saves the given cliente object using the clienteInterface.
+     *
+     * @param clienteDto the cliente object to be saved
+     */
+    public clienteDto save(clienteDto clienteDto) {
+        cliente cliente = convertToEntity(clienteDto);
+        clienteInterface.save(cliente);
+        return clienteDto;
     }
 
+    /**
+     * Deletes a client by their unique identifier.
+     *
+     * @param id the unique identifier of the client to be deleted
+     * @return true if the client was successfully deleted, false if the client does
+     *         not exist
+     */
     public boolean delete(UUID id) {
         if (clienteInterface.existsById(id)) {
             clienteInterface.deleteById(id);
@@ -67,8 +115,15 @@ public class clienteService {
         return false;
     }
 
-    public void update(clienteDto clienteDto) {
+    /**
+     * Updates an existing cliente entity with the provided clienteDto data.
+     *
+     * @param clienteDto the data transfer object containing updated cliente
+     *                   information
+     */
+    public clienteDto update(clienteDto clienteDto) {
         cliente cliente = convertToEntity(clienteDto);
         clienteInterface.save(cliente);
+        return clienteDto;
     }
 }

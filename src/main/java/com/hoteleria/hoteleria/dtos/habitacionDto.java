@@ -3,10 +3,10 @@ package com.hoteleria.hoteleria.dtos;
 import java.util.Set;
 import java.util.UUID;
 
-import com.hoteleria.hoteleria.models.hotel;
 import com.hoteleria.hoteleria.models.promocion;
 import com.hoteleria.hoteleria.models.reservacion;
 
+/* Dto class habitacion */
 public class habitacionDto {
     private UUID id;
     private hotelDTOW hotel;

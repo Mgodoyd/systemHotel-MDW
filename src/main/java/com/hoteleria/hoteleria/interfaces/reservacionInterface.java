@@ -20,4 +20,6 @@ public interface reservacionInterface extends JpaRepository<reservacion, UUID> {
 
     void deleteById(UUID id);
 
+    void deleteByHabitacionId(UUID id);
+
 }

@@ -3,6 +3,7 @@ package com.hoteleria.hoteleria.dtos;
 import java.util.Date;
 import java.util.UUID;
 
+/* Dto class factura */
 public class facturaDto {
     private UUID id;
     private reservacionDTO reservacion;

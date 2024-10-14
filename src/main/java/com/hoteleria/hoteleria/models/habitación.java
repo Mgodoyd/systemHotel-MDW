@@ -1,14 +1,17 @@
 package com.hoteleria.hoteleria.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "habitacion")
@@ -20,9 +23,11 @@ public class habitación {
 
     @ManyToOne
     @JoinColumn(name = "id_hotel", nullable = false)
+    @JsonIgnore
     private hotel hotel;
 
     @Column(length = 10, nullable = false)
+    @Pattern(regexp = "^[0-9]+$", message = "El número debe contener solo dígitos.")
     private String numero;
 
     @Column(length = 50)
@@ -34,11 +39,13 @@ public class habitación {
     @Column(columnDefinition = "DECIMAL(10,2)")
     private Double precio;
 
-    @OneToMany(mappedBy = "habitacion")
-    private Set<reservacion> reservaciones;
+    @OneToMany(mappedBy = "habitacion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<reservacion> reservaciones = new HashSet<>();
 
-    @OneToMany(mappedBy = "habitacion")
-    private Set<promocion> promociones;
+    @OneToMany(mappedBy = "habitacion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<promocion> promociones = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -51,16 +58,74 @@ public class habitación {
     public habitación() {
     }
 
-    public habitación(UUID id, hotel hotel, String numero, String tipo, String descripcion, Double precio,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.hotel = hotel;
-        this.numero = numero;
-        this.tipo = tipo;
-        this.descripcion = descripcion;
-        this.precio = precio;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    public habitación(Builder builder) {
+        this.id = builder.id;
+        this.hotel = builder.hotel;
+        this.numero = builder.numero;
+        this.tipo = builder.tipo;
+        this.descripcion = builder.descripcion;
+        this.precio = builder.precio;
+        this.createdAt = builder.createdAt;
+        this.updatedAt = builder.updatedAt;
+    }
+
+    public static class Builder {
+        private UUID id;
+        private hotel hotel;
+        private String numero;
+        private String tipo;
+        private String descripcion;
+        private Double precio;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        public Builder() {
+        }
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder hotel(hotel hotel) {
+            this.hotel = hotel;
+            return this;
+        }
+
+        public Builder numero(String numero) {
+            this.numero = numero;
+            return this;
+        }
+
+        public Builder tipo(String tipo) {
+            this.tipo = tipo;
+            return this;
+        }
+
+        public Builder descripcion(String descripcion) {
+            this.descripcion = descripcion;
+            return this;
+        }
+
+        public Builder precio(Double precio) {
+            this.precio = precio;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder updatedAt(LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public habitación build() {
+            return new habitación(this);
+        }
+
     }
 
     public UUID getId() {
@@ -131,15 +196,7 @@ public class habitación {
         return this.createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public LocalDateTime getUpdatedAt() {
         return this.updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

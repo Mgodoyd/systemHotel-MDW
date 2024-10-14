@@ -2,8 +2,7 @@ package com.hoteleria.hoteleria.dtos;
 
 import java.util.UUID;
 
-import com.hoteleria.hoteleria.models.servicio;
-
+/* Dto class servicioHabitacion */
 public class servicioHabitacionDto {
     private UUID id;
     private servicioDTO servicio;

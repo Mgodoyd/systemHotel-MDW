@@ -1,7 +1,7 @@
 package com.hoteleria.hoteleria.models;
 
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.*;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -18,7 +18,7 @@ public class servicio {
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_reservacion", nullable = false)
     private reservacion reservacion;
 
@@ -31,16 +31,16 @@ public class servicio {
     @Column(columnDefinition = "DECIMAL(10,2)")
     private Double precio;
 
-    @OneToMany(mappedBy = "servicio")
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<servicioHabitacion> serviciosHabitacion;
 
-    @OneToMany(mappedBy = "servicio")
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<promocion> promociones;
 
-    @OneToMany(mappedBy = "servicio")
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<parqueo> parqueos;
 
-    @OneToMany(mappedBy = "servicio")
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<usoInstalacion> usoInstalaciones;
 
     @CreationTimestamp

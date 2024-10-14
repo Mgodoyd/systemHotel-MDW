@@ -1,24 +1,16 @@
 package com.hoteleria.hoteleria.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @Table(name = "hotel")
@@ -51,11 +43,11 @@ public class hotel {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     // @JsonManagedReference
     private Set<personal> staff;
 
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<habitación> rooms;
 
     @CreationTimestamp
@@ -69,83 +61,102 @@ public class hotel {
     public hotel() {
     }
 
-    public hotel(UUID id, String name, String address, int phone, String email, String description,
-            Set<personal> staff,
-            Set<habitación> rooms, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.description = description;
-        this.staff = staff;
-        this.rooms = rooms;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    private hotel(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.address = builder.address;
+        this.phone = builder.phone;
+        this.email = builder.email;
+        this.description = builder.description;
+        this.staff = builder.staff;
+        this.rooms = builder.rooms;
+    }
+
+    public static class Builder {
+        private UUID id;
+        private String name;
+        private String address;
+        private int phone;
+        private String email;
+        private String description;
+        private Set<personal> staff;
+        private Set<habitación> rooms;
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder address(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Builder phone(int phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder staff(Set<personal> staff) {
+            this.staff = staff;
+            return this;
+        }
+
+        public Builder rooms(Set<habitación> rooms) {
+            this.rooms = rooms;
+            return this;
+        }
+
+        public hotel build() {
+            return new hotel(this);
+        }
     }
 
     public UUID getId() {
         return this.id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getName() {
         return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAddress() {
         return this.address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public int getPhone() {
         return this.phone;
-    }
-
-    public void setPhone(int phone) {
-        this.phone = phone;
     }
 
     public String getEmail() {
         return this.email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getDescription() {
         return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Set<personal> getStaff() {
         return this.staff;
     }
 
-    public void setStaff(Set<personal> staff) {
-        this.staff = staff;
-    }
-
     public Set<habitación> getRooms() {
         return this.rooms;
-    }
-
-    public void setRooms(Set<habitación> rooms) {
-        this.rooms = rooms;
     }
 
     public LocalDateTime getCreatedAt() {

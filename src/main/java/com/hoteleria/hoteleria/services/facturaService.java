@@ -72,13 +72,12 @@ public class facturaService {
 
         // Convertir de DTO a entidad Cliente, solo si no es nulo
         if (dto.getReservacion().getCliente() != null) {
-            cliente cliente = new cliente();
-            cliente.setId(dto.getReservacion().getCliente().getId());
-            cliente.setNombre(dto.getReservacion().getCliente().getNombre());
-            cliente.setNit(dto.getReservacion().getCliente().getNit());
-            reservacion.setCliente(cliente); // Asignar cliente a la reservación
+            cliente.Builder clienteBuilder = new cliente.Builder();
+            clienteBuilder.id(dto.getReservacion().getCliente().getId());
+            clienteBuilder.nombre(dto.getReservacion().getCliente().getNombre());
+            clienteBuilder.nit(dto.getReservacion().getCliente().getNit());
+            reservacion.setCliente(clienteBuilder.build());
         }
-
         // Convertir de DTO a entidad Habitación, solo si no es nulo
         if (dto.getReservacion().getHabitacion() != null) {
             habitación habitacion = new habitación();

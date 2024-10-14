@@ -121,7 +121,7 @@ public class SecurityFilter {
                                 .hasAuthority(Permission.READ_ONE_HABITACION.name());
                 auth.requestMatchers(HttpMethod.POST, "/api/v1/habitaciones")
                                 .hasAuthority(Permission.SAVE_ONE_HABITACION.name());
-                auth.requestMatchers(HttpMethod.PUT, "/api/v1/habitaciones")
+                auth.requestMatchers(HttpMethod.PATCH, "/api/v1/habitaciones")
                                 .hasAuthority(Permission.UPDATE_ONE_HABITACION.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/habitaciones")
                                 .hasAuthority(Permission.DELETE_ONE_HABITACION.name());
@@ -135,7 +135,7 @@ public class SecurityFilter {
                                 .hasAuthority(Permission.READ_ONE_USER.name());
                 auth.requestMatchers(HttpMethod.POST, "/api/v1/clientes")
                                 .hasAuthority(Permission.SAVE_ONE_USER.name());
-                auth.requestMatchers(HttpMethod.PUT, "/api/v1/clientes")
+                auth.requestMatchers(HttpMethod.PATCH, "/api/v1/clientes")
                                 .hasAuthority(Permission.UPDATE_ONE_USER.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/clientes")
                                 .hasAuthority(Permission.DELETE_ONE_USER.name());

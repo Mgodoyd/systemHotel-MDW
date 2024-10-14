@@ -38,10 +38,10 @@ public class reservacion {
     @CreationTimestamp
     private LocalDateTime fecha_reservacion;
 
-    @OneToMany(mappedBy = "reservacion")
+    @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<servicio> servicios;
 
-    @OneToMany(mappedBy = "reservacion")
+    @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<factura> facturas;
 
     @CreationTimestamp

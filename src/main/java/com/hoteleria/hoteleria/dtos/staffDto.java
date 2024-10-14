@@ -3,10 +3,9 @@ package com.hoteleria.hoteleria.dtos;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.hoteleria.hoteleria.models.hotel;
-import com.hoteleria.hoteleria.models.puesto;
 import com.hoteleria.hoteleria.models.role;
 
+/* Dto class personal */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class staffDto {
 

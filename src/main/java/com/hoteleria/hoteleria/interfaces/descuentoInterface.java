@@ -22,5 +22,4 @@ public interface descuentoInterface extends JpaRepository<descuentos, UUID> {
     void deleteById(UUID id);
 
     descuentos findByCodigo(String codigo);
-
 }
