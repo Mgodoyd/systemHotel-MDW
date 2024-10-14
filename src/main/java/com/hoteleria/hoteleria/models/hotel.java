@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.*;
 
+/* Entity hotel */
 @Entity
 @Table(name = "hotel")
 @JsonInclude(JsonInclude.Include.NON_NULL)

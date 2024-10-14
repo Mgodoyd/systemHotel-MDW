@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+/* Entity personal */
 @Entity
 @Table(name = "personal")
 @JsonInclude(JsonInclude.Include.NON_NULL)

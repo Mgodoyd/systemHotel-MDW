@@ -41,15 +41,49 @@ public class factura {
     public factura() {
     }
 
-    public factura(UUID id, reservacion reservacion, Date fecha_emision, String descripcion, Double monto_total,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.reservacion = reservacion;
-        this.fecha_emision = fecha_emision;
-        this.descripcion = descripcion;
-        this.monto_total = monto_total;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    public factura(Builder builder) {
+        this.id = builder.id;
+        this.reservacion = builder.reservacion;
+        this.fecha_emision = builder.fecha_emision;
+        this.descripcion = builder.descripcion;
+        this.monto_total = builder.monto_total;
+    }
+
+    public static class Builder {
+        private UUID id;
+        private reservacion reservacion;
+        private Date fecha_emision;
+        private String descripcion;
+        private Double monto_total;
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder reservacion(reservacion reservacion) {
+            this.reservacion = reservacion;
+            return this;
+        }
+
+        public Builder fecha_emision(Date fecha_emision) {
+            this.fecha_emision = fecha_emision;
+            return this;
+        }
+
+        public Builder descripcion(String descripcion) {
+            this.descripcion = descripcion;
+            return this;
+        }
+
+        public Builder monto_total(Double monto_total) {
+            this.monto_total = monto_total;
+            return this;
+        }
+
+        public factura build() {
+            return new factura(this);
+        }
     }
 
     public UUID getId() {
@@ -96,16 +130,7 @@ public class factura {
         return this.createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public LocalDateTime getUpdatedAt() {
         return this.updatedAt;
     }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
 }

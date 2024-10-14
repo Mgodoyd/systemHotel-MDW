@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+/* Entity reservacion */
 @Entity
 @Table(name = "reservacion")
 public class reservacion {
@@ -39,10 +41,10 @@ public class reservacion {
     private LocalDateTime fecha_reservacion;
 
     @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<servicio> servicios;
+    private Set<servicio> servicios = new HashSet<>();
 
     @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<factura> facturas;
+    private Set<factura> facturas = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -65,9 +67,9 @@ public class reservacion {
         this.fecha_entrada = fecha_entrada;
         this.fecha_salida = fecha_salida;
         this.estado = estado;
-        this.fecha_reservacion = fecha_reservacion;
-        this.servicios = servicios;
         this.facturas = facturas;
+        this.servicios = servicios;
+        this.fecha_reservacion = fecha_reservacion;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -132,16 +134,8 @@ public class reservacion {
         return this.servicios;
     }
 
-    public void setServicios(Set<servicio> servicios) {
-        this.servicios = servicios;
-    }
-
     public Set<factura> getFacturas() {
         return this.facturas;
-    }
-
-    public void setFacturas(Set<factura> facturas) {
-        this.facturas = facturas;
     }
 
     public LocalDateTime getCreatedAt() {

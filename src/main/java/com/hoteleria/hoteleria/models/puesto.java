@@ -11,11 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
-/**
- * Represents a job position within the hotel management system.
- * This entity is mapped to the "puesto" table in the database.
- * 
- */
+/* Entity puesto */
 @Entity
 @Table(name = "puesto")
 @JsonInclude(JsonInclude.Include.NON_NULL)

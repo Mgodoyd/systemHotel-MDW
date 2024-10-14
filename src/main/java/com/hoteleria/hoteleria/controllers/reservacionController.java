@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.hoteleria.hoteleria.dtos.reservacionDto;
 import com.hoteleria.hoteleria.helpers.responseHelper;
-import com.hoteleria.hoteleria.models.reservacion;
 import com.hoteleria.hoteleria.services.reservacionService;
 
 import jakarta.validation.Valid;
@@ -21,7 +20,7 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
         RequestMethod.GET,
         RequestMethod.DELETE,
-        RequestMethod.PUT }, allowedHeaders = { "Authorization", "Content-Type" })
+        RequestMethod.PATCH }, allowedHeaders = { "Authorization", "Content-Type" })
 @RequestMapping("/api/v1")
 public class reservacionController {
     @Autowired
@@ -36,6 +35,7 @@ public class reservacionController {
     public ResponseEntity<responseHelper<reservacionDto>> getReservacionById(
             @RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("id"));
+
         return handleResponse(() -> {
             reservacionDto reservacion = reservacionService.getById(id);
             if (reservacion == null) {
@@ -46,32 +46,41 @@ public class reservacionController {
     }
 
     @PostMapping("/reservaciones") // Save reservacion
-    public ResponseEntity<responseHelper<reservacionDto>> saveReservacion(@Valid @RequestBody reservacion reservacion) {
-        return handleResponse(() -> reservacionService.save(reservacion));
+    public ResponseEntity<responseHelper<reservacionDto>> saveReservacion(
+            @Valid @RequestBody reservacionDto reservacion) {
+        return handleResponse(() -> {
+            reservacionService.save(reservacion);
+
+            return reservacion;
+        });
     }
 
     @PatchMapping("/reservaciones") // Update reservacion
     public ResponseEntity<responseHelper<reservacionDto>> updateReservacion(
             @Valid @RequestBody reservacionDto reservacion) {
         return handleResponse(() -> {
+            reservacionDto existingReservacion = reservacionService.getById(reservacion.getId());
+            if (existingReservacion == null) {
+                throw new ResourceNotFoundException("Reservacion does not exist");
+            }
             reservacionService.update(reservacion);
-            return reservacion; // or return updated reservacionDto if needed
+            return reservacion;
         });
     }
 
     @DeleteMapping("/reservaciones") // Delete reservacion
     public ResponseEntity<responseHelper<Boolean>> deleteReservacion(@RequestBody Map<String, String> requestBody) {
-        UUID id = UUID.fromString(requestBody.get("id"));
         return handleResponse(() -> {
-            reservacionDto reservacion = reservacionService.getById(id);
-            if (reservacion == null) {
+            UUID id = UUID.fromString(requestBody.get("id"));
+            boolean result = reservacionService.delete(id);
+            if (!result) {
                 throw new ResourceNotFoundException("Reservacion does not exist");
             }
-            reservacionService.delete(id);
-            return true;
+            return result;
         });
     }
 
+    // Helper method to handle responses
     private <T> ResponseEntity<responseHelper<T>> handleResponse(Supplier<T> action) {
         try {
             T result = action.get();

@@ -13,6 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/* Entity habitación */
 @Entity
 @Table(name = "habitacion")
 public class habitación {

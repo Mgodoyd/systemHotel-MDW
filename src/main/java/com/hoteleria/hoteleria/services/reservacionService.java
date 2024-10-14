@@ -78,8 +78,6 @@ public class reservacionService {
         reservacion.setFecha_entrada(dto.getFecha_entrada());
         reservacion.setFecha_salida(dto.getFecha_salida());
         reservacion.setEstado(dto.getEstado());
-        reservacion.setServicios(dto.getServicios());
-        reservacion.setFacturas(dto.getFacturas());
 
         return reservacion;
     }
@@ -114,9 +112,10 @@ public class reservacionService {
      * @param reservacion the reservacion entity to be saved
      * @return the DTO representation of the saved reservacion entity
      */
-    public reservacionDto save(reservacion reservacion) {
-        reservacion savedReservacion = reservacionInterface.save(reservacion);
-        return convertToDto(savedReservacion);
+    public reservacionDto save(reservacionDto reservacion) {
+        reservacion entity = convertToEntity(reservacion);
+        reservacionInterface.save(entity);
+        return convertToDto(entity);
     }
 
     /**
