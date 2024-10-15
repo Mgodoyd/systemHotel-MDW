@@ -34,6 +34,7 @@ public class habitacionService {
         dto.setNumero(habitacion.getNumero());
         dto.setTipo(habitacion.getTipo());
         dto.setDescripcion(habitacion.getDescripcion());
+        dto.setImagen(habitacion.getImagen());
         dto.setPrecio(habitacion.getPrecio());
         dto.setReservaciones(habitacion.getReservaciones());
         dto.setPromociones(habitacion.getPromociones());
@@ -54,6 +55,7 @@ public class habitacionService {
                 .numero(dto.getNumero())
                 .tipo(dto.getTipo())
                 .descripcion(dto.getDescripcion())
+                .imagen(dto.getImagen())
                 .precio(dto.getPrecio())
                 .build();
     }

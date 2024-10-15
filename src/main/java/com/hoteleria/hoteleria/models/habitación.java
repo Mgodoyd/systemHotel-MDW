@@ -37,6 +37,10 @@ public class habitación {
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
+    @Column(length = 255, nullable = false)
+    @Pattern(regexp = ".*\\.(jpg|jpeg|png|gif)$", message = "La imagen debe ser un archivo de imagen válido (jpg, jpeg, png, gif).")
+    private String imagen;
+
     @Column(columnDefinition = "DECIMAL(10,2)")
     private Double precio;
 
@@ -65,6 +69,7 @@ public class habitación {
         this.numero = builder.numero;
         this.tipo = builder.tipo;
         this.descripcion = builder.descripcion;
+        this.imagen = builder.imagen;
         this.precio = builder.precio;
         this.createdAt = builder.createdAt;
         this.updatedAt = builder.updatedAt;
@@ -76,6 +81,7 @@ public class habitación {
         private String numero;
         private String tipo;
         private String descripcion;
+        private String imagen;
         private Double precio;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
@@ -105,6 +111,11 @@ public class habitación {
 
         public Builder descripcion(String descripcion) {
             this.descripcion = descripcion;
+            return this;
+        }
+
+        public Builder imagen(String imagen) {
+            this.imagen = imagen;
             return this;
         }
 
@@ -167,6 +178,10 @@ public class habitación {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getImagen() {
+        return this.imagen;
     }
 
     public Double getPrecio() {

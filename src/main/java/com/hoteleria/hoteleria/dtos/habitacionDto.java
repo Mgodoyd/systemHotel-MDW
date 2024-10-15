@@ -13,6 +13,7 @@ public class habitacionDto {
     private String numero;
     private String tipo;
     private String descripcion;
+    private String imagen;
     private Double precio;
     private Set<reservacion> reservaciones;
     private Set<promocion> promociones;
@@ -20,13 +21,15 @@ public class habitacionDto {
     public habitacionDto() {
     }
 
-    public habitacionDto(UUID id, hotelDTOW hotel, String numero, String tipo, String descripcion, Double precio,
+    public habitacionDto(UUID id, hotelDTOW hotel, String numero, String tipo, String descripcion, String imagen,
+            Double precio,
             Set<reservacion> reservaciones, Set<promocion> promociones) {
         this.id = id;
         this.hotel = hotel;
         this.numero = numero;
         this.tipo = tipo;
         this.descripcion = descripcion;
+        this.imagen = imagen;
         this.precio = precio;
         this.reservaciones = reservaciones;
         this.promociones = promociones;
@@ -70,6 +73,14 @@ public class habitacionDto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getImagen() {
+        return this.imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     public Double getPrecio() {
