@@ -53,10 +53,10 @@ public class promocionService {
         habitacion.setPrecio(promocionDto.getHabitacion().getPrecio());
         promocion.setHabitacion(habitacion);
 
-        servicio servicio = new servicio();
-        servicio.setId(promocionDto.getServicio().getId());
-        servicio.setNombre(promocionDto.getServicio().getNombre());
-        promocion.setServicio(servicio);
+        servicio.Builder servicioBuilder = new servicio.Builder()
+                .id(promocionDto.getServicio().getId())
+                .nombre(promocionDto.getServicio().getNombre());
+        promocion.setServicio(servicioBuilder.build());
 
         promocion.setDescripcion(promocionDto.getDescripcion());
         promocion.setTipo_servicio(promocionDto.getTipo_servicio());

@@ -6,8 +6,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.hoteleria.hoteleria.dtos.servicioHabitacionDto;
@@ -18,7 +17,7 @@ import com.hoteleria.hoteleria.services.servicioHabitacionService;
 @CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
         RequestMethod.GET,
         RequestMethod.DELETE,
-        RequestMethod.PUT }, allowedHeaders = { "Authorization", "Content-Type" })
+        RequestMethod.PATCH }, allowedHeaders = { "Authorization", "Content-Type" })
 @RequestMapping("/api/v1")
 public class servicioHabitacionController {
 
@@ -35,67 +34,57 @@ public class servicioHabitacionController {
             @RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("id"));
 
-        servicioHabitacionDto servicioHabitacion = servicioHabitacionService.getServicioHabitacion(id);
-        if (servicioHabitacion == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null,
-                            "ServicioHabitacion does not exist"));
-        }
-
-        return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, servicioHabitacion, null));
+        return handleResponse(() -> {
+            servicioHabitacionDto servicioHabitacion = servicioHabitacionService.getServicioHabitacion(id);
+            if (servicioHabitacion == null) {
+                throw new IllegalArgumentException("ServicioHabitacion does not exist");
+            }
+            return servicioHabitacion;
+        });
     }
 
     @PostMapping("/servicioHabitaciones") // create servicio
     public ResponseEntity<responseHelper<servicioHabitacionDto>> createServicioHabitacion(
             @RequestBody servicioHabitacionDto servicioHabitacionDto) {
-        try {
-            servicioHabitacionDto servicioHabitacion = servicioHabitacionService.save(servicioHabitacionDto);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, servicioHabitacion, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+        return handleResponse(() -> servicioHabitacionService.save(servicioHabitacionDto));
     }
 
     @PatchMapping("/servicioHabitaciones") // update servicio
     public ResponseEntity<responseHelper<servicioHabitacionDto>> updateServicioHabitacion(
             @RequestBody servicioHabitacionDto servicioHabitacionDto) {
-        try {
-            servicioHabitacionDto servicioHabitacion = servicioHabitacionService.update(servicioHabitacionDto);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, servicioHabitacion, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, e.getMessage()));
-        }
+        servicioHabitacionDto servicioHabiExist = servicioHabitacionService
+                .getServicioHabitacion(servicioHabitacionDto.getId());
+        return handleResponse(() -> {
+            if (servicioHabiExist == null) {
+                throw new IllegalArgumentException("ServicioHabitacion does not exist");
+            }
+            return servicioHabitacionService.save(servicioHabitacionDto);
+        });
     }
 
     @DeleteMapping("/servicioHabitaciones") // delete servicio
     public ResponseEntity<responseHelper<Boolean>> deleteServicioHabitacion(
             @RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("id"));
-        servicioHabitacionDto servicioHabitacion = servicioHabitacionService.getServicioHabitacion(id);
-
-        try {
+        return handleResponse(() -> {
+            servicioHabitacionDto servicioHabitacion = servicioHabitacionService.getServicioHabitacion(id);
             if (servicioHabitacion == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, false,
-                                "ServicioHabitacion does not exist"));
+                throw new IllegalArgumentException("ServicioHabitacion does not exist");
             }
-            servicioHabitacionService.delete(id);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, true, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, false, e.getMessage()));
-        }
+            return servicioHabitacionService.delete(id);
+        });
     }
 
     private <T> ResponseEntity<responseHelper<T>> handleResponse(Supplier<T> action) {
         try {
             T result = action.get();
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, result, null));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 }

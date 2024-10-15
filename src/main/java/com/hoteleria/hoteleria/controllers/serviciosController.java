@@ -6,8 +6,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.hoteleria.hoteleria.dtos.serviciosDto;
@@ -18,7 +17,7 @@ import com.hoteleria.hoteleria.services.servicioService;
 @CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
         RequestMethod.GET,
         RequestMethod.DELETE,
-        RequestMethod.PUT }, allowedHeaders = { "Authorization", "Content-Type" })
+        RequestMethod.PATCH }, allowedHeaders = { "Authorization", "Content-Type" })
 @RequestMapping("/api/v1")
 public class serviciosController {
     @Autowired
@@ -29,85 +28,76 @@ public class serviciosController {
         return handleResponse(() -> servicioService.getServicios());
     }
 
-    @GetMapping("/servicios/id") // get servicio by id
+    @GetMapping("/servicios/id") // Get servicio by id
     public ResponseEntity<responseHelper<serviciosDto>> getServicioById(@RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("id"));
-
-        serviciosDto servicio = servicioService.getServicio(id);
-        if (servicio == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null,
-                            "Servicio does not exist"));
-        }
-
-        return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, servicio, null));
+        return handleResponse(() -> {
+            serviciosDto servicio = servicioService.getServicio(id);
+            if (servicio == null) {
+                throw new IllegalArgumentException("Servicio does not exist");
+            }
+            return servicio;
+        });
     }
 
-    @GetMapping("/servicios/nombre") // get servicio by nombre
+    @GetMapping("/servicios/nombre") // Get servicio by nombre
     public ResponseEntity<responseHelper<serviciosDto>> getServicioByNombre(
             @RequestBody Map<String, String> requestBody) {
         String nombre = requestBody.get("nombre");
-
-        serviciosDto servicio = servicioService.getServicioByNombre(nombre);
-        if (servicio == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null,
-                            "Servicio does not exist"));
-        }
-
-        return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, servicio, null));
+        return handleResponse(() -> {
+            serviciosDto servicio = servicioService.getServicioByNombre(nombre);
+            if (servicio == null) {
+                throw new IllegalArgumentException("Servicio does not exist");
+            }
+            return servicio;
+        });
     }
 
-    @PostMapping("/servicios") // save servicio
+    @PostMapping("/servicios") // Save servicio
     public ResponseEntity<responseHelper<serviciosDto>> saveServicio(@RequestBody serviciosDto servicio) {
-        try {
-            serviciosDto newServicio = servicioService.save(servicio);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, newServicio, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+        return handleResponse(() -> {
+            serviciosDto servicioExist = servicioService.getServicioByNombre(servicio.getNombre());
+            if (servicioExist != null) {
+                throw new IllegalArgumentException("Servicio already exists");
+            }
+            return servicioService.save(servicio);
+        });
     }
 
-    @PatchMapping("/servicios") // update servicio
+    @PatchMapping("/servicios") // Update servicio
     public ResponseEntity<responseHelper<serviciosDto>> updateServicio(@RequestBody serviciosDto servicio) {
-        try {
-            servicioService.update(servicio);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, servicio, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+        return handleResponse(() -> {
+            serviciosDto servicioExist = servicioService.getServicio(servicio.getId());
+            if (servicioExist == null) {
+                throw new IllegalArgumentException("Servicio does not exist");
+            }
+            return servicioService.update(servicio);
+        });
     }
 
-    @DeleteMapping("/servicios") // delete servicio
+    @DeleteMapping("/servicios") // Delete servicio
     public ResponseEntity<responseHelper<Boolean>> deleteServicio(@RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("id"));
-
-        serviciosDto servicio = servicioService.getServicio(id);
-
-        try {
+        return handleResponse(() -> {
+            serviciosDto servicio = servicioService.getServicio(id);
             if (servicio == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, false,
-                                "Servicio does not exist"));
+                throw new IllegalArgumentException("Servicio does not exist");
             }
-
             servicioService.delete(id);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, true, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, false, e.getMessage()));
-        }
+            return true;
+        });
     }
 
     private <T> ResponseEntity<responseHelper<T>> handleResponse(Supplier<T> action) {
         try {
             T result = action.get();
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, result, null));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 }

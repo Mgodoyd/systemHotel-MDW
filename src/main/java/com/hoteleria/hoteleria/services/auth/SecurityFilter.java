@@ -56,6 +56,9 @@ public class SecurityFilter {
                                         configureAuthForReservaciones(auth);
                                         configureAuthForFacturas(auth);
                                         configureAuthForServicios(auth);
+                                        configureAuthForPaqueos(auth);
+                                        configureAuthForServicioHabitaciones(auth);
+                                        configureAuthForUsoInstalaciones(auth);
                                         configureAuthForDescuentos(auth);
                                         auth.anyRequest().denyAll();
                                 });
@@ -180,6 +183,48 @@ public class SecurityFilter {
                 auth.requestMatchers(HttpMethod.PATCH, "/api/v1/servicios")
                                 .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/servicios")
+                                .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+        }
+
+        private void configureAuthForPaqueos(
+                        AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/parqueos")
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/parqueos/id")
+                                .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.POST, "/api/v1/parqueos")
+                                .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.PATCH, "/api/v1/parqueos")
+                                .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.DELETE, "/api/v1/parqueos")
+                                .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+        }
+
+        private void configureAuthForServicioHabitaciones(
+                        AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/servicioHabitaciones")
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/servicioHabitaciones/id")
+                                .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.POST, "/api/v1/servicioHabitaciones")
+                                .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.PATCH, "/api/v1/servicioHabitaciones")
+                                .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.DELETE, "/api/v1/servicioHabitaciones")
+                                .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+        }
+
+        private void configureAuthForUsoInstalaciones(
+                        AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/usoInstalaciones")
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/usoInstalaciones/id")
+                                .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.POST, "/api/v1/usoInstalaciones")
+                                .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.PATCH, "/api/v1/usoInstalaciones")
+                                .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.DELETE, "/api/v1/usoInstalaciones")
                                 .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
         }
 

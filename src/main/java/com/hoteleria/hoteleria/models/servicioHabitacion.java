@@ -1,6 +1,5 @@
 package com.hoteleria.hoteleria.models;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -9,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
 
+/* Entity servicioHabitacion */
 @Entity
 @Table(name = "serviciosHabitacion")
 public class servicioHabitacion {
@@ -38,14 +38,42 @@ public class servicioHabitacion {
     public servicioHabitacion() {
     }
 
-    public servicioHabitacion(UUID id, servicio servicio, Integer cantidad, Double precio_total,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.servicio = servicio;
-        this.cantidad = cantidad;
-        this.precio_total = precio_total;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    public servicioHabitacion(Builder builder) {
+        this.id = builder.id;
+        this.servicio = builder.servicio;
+        this.cantidad = builder.cantidad;
+        this.precio_total = builder.precio_total;
+    }
+
+    public static class Builder {
+        private UUID id;
+        private servicio servicio;
+        private Integer cantidad;
+        private Double precio_total;
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder servicio(servicio servicio) {
+            this.servicio = servicio;
+            return this;
+        }
+
+        public Builder cantidad(Integer cantidad) {
+            this.cantidad = cantidad;
+            return this;
+        }
+
+        public Builder precio_total(Double precio_total) {
+            this.precio_total = precio_total;
+            return this;
+        }
+
+        public servicioHabitacion build() {
+            return new servicioHabitacion(this);
+        }
     }
 
     public UUID getId() {
@@ -84,16 +112,7 @@ public class servicioHabitacion {
         return this.createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public LocalDateTime getUpdatedAt() {
         return this.updatedAt;
     }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
 }

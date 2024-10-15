@@ -57,6 +57,10 @@ public class reservacion {
     public reservacion() {
     }
 
+    public reservacion(UUID id) {
+        this.id = id;
+    }
+
     public reservacion(UUID id, cliente cliente, habitación habitacion, Date fecha_entrada, Date fecha_salida,
             String estado, LocalDateTime fecha_reservacion, Set<servicio> servicios, Set<factura> facturas,
             LocalDateTime createdAt,

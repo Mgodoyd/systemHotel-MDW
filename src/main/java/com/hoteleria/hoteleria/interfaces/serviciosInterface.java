@@ -1,5 +1,6 @@
 package com.hoteleria.hoteleria.interfaces;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +19,6 @@ public interface serviciosInterface extends JpaRepository<servicio, UUID> {
 
     void deleteById(UUID id);
 
-    servicio findByNombre(String nombre);
+    Optional<servicio> findByNombre(String nombre);
 
 }

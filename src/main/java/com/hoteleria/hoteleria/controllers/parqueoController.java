@@ -6,8 +6,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.hoteleria.hoteleria.dtos.parqueoDto;
@@ -18,7 +17,7 @@ import com.hoteleria.hoteleria.services.parqueoService;
 @CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
         RequestMethod.GET,
         RequestMethod.DELETE,
-        RequestMethod.PUT }, allowedHeaders = { "Authorization", "Content-Type" })
+        RequestMethod.PATCH }, allowedHeaders = { "Authorization", "Content-Type" })
 @RequestMapping("/api/v1")
 public class parqueoController {
 
@@ -33,66 +32,56 @@ public class parqueoController {
     @GetMapping("/parqueos/id") // get parqueo by id
     public ResponseEntity<responseHelper<parqueoDto>> getParqueoById(@RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("id"));
-
-        parqueoDto parqueo = parqueoService.getParqueo(id);
-        if (parqueo == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null,
-                            "Parqueo does not exist"));
-        }
-
-        return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, parqueo, null));
+        return handleResponse(() -> {
+            parqueoDto parqueo = parqueoService.getParqueo(id);
+            if (parqueo == null) {
+                throw new IllegalArgumentException("Parqueo does not exist");
+            }
+            return parqueo;
+        });
     }
 
     @PostMapping("/parqueos") // create parqueo
     public ResponseEntity<responseHelper<parqueoDto>> createParqueo(@RequestBody parqueoDto parqueoDto) {
-        try {
-            parqueoDto parqueo = parqueoService.save(parqueoDto);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, parqueo, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+        return handleResponse(() -> parqueoService.save(parqueoDto));
     }
 
     @PatchMapping("/parqueos") // update parqueo
     public ResponseEntity<responseHelper<parqueoDto>> updateParqueo(@RequestBody parqueoDto parqueoDto) {
-        try {
-            parqueoDto parqueo = parqueoService.update(parqueoDto);
-            return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, parqueo, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
-        }
+        parqueoDto parqueoExist = parqueoService.getParqueo(parqueoDto.getId());
+        return handleResponse(() -> {
+            if (parqueoExist == null) {
+                throw new IllegalArgumentException("Parqueo does not exist");
+            }
+            return parqueoService.save(parqueoDto);
+        });
     }
 
     @DeleteMapping("/parqueos") // delete parqueo
     public ResponseEntity<responseHelper<Boolean>> deleteParqueo(@RequestBody Map<String, String> requestBody) {
         UUID id = UUID.fromString(requestBody.get("id"));
 
-        boolean deleted = parqueoService.delete(id);
-
-        try {
-            if (deleted) {
-                return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, true, null));
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, false,
-                                "Parqueo does not exist"));
+        return handleResponse(() -> {
+            parqueoDto parqueo = parqueoService.getParqueo(id);
+            if (parqueo == null) {
+                throw new IllegalArgumentException("Parqueo does not exist");
             }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, false, e));
-        }
+            parqueoService.delete(id);
+            return true;
+        });
     }
 
+    // Helper method to handle responses
     private <T> ResponseEntity<responseHelper<T>> handleResponse(Supplier<T> action) {
         try {
             T result = action.get();
             return ResponseEntity.ok(new responseHelper<>("Success", HttpStatus.OK, result, null));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e));
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage()));
         }
     }
 
