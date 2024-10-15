@@ -9,6 +9,8 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "factura")
 public class factura {
@@ -19,6 +21,7 @@ public class factura {
 
     @ManyToOne
     @JoinColumn(name = "id_reservacion", nullable = false)
+    @JsonIgnore
     private reservacion reservacion;
 
     @Temporal(TemporalType.TIMESTAMP)

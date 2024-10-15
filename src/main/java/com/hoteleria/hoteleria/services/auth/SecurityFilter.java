@@ -59,6 +59,7 @@ public class SecurityFilter {
                                         configureAuthForPaqueos(auth);
                                         configureAuthForServicioHabitaciones(auth);
                                         configureAuthForUsoInstalaciones(auth);
+                                        configureAuthForPromociones(auth);
                                         configureAuthForDescuentos(auth);
                                         auth.anyRequest().denyAll();
                                 });
@@ -225,6 +226,20 @@ public class SecurityFilter {
                 auth.requestMatchers(HttpMethod.PATCH, "/api/v1/usoInstalaciones")
                                 .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/usoInstalaciones")
+                                .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+        }
+
+        private void configureAuthForPromociones(
+                        AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/promociones")
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/promociones/id")
+                                .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.POST, "/api/v1/promociones")
+                                .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.PATCH, "/api/v1/promociones")
+                                .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.DELETE, "/api/v1/promociones")
                                 .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
         }
 

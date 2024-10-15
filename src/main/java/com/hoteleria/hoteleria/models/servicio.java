@@ -8,6 +8,8 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /* Entity servicio */
 @Entity
 @Table(name = "servicios")
@@ -31,15 +33,19 @@ public class servicio {
     private Double precio;
 
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<servicioHabitacion> serviciosHabitacion;
 
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<promocion> promociones;
 
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<parqueo> parqueos;
 
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<usoInstalacion> usoInstalaciones;
 
     @CreationTimestamp

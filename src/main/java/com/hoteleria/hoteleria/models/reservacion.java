@@ -11,6 +11,8 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /* Entity reservacion */
 @Entity
 @Table(name = "reservacion")
@@ -22,10 +24,12 @@ public class reservacion {
 
     @ManyToOne
     @JoinColumn(name = "id_cliente", nullable = false)
+    @JsonIgnore
     private cliente cliente;
 
     @ManyToOne
     @JoinColumn(name = "id_habitacion", nullable = false)
+    @JsonIgnore
     private habitación habitacion;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -41,6 +45,7 @@ public class reservacion {
     private LocalDateTime fecha_reservacion;
 
     @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<servicio> servicios = new HashSet<>();
 
     @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)

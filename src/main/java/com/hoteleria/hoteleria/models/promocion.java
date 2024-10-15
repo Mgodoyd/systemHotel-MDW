@@ -1,7 +1,7 @@
 package com.hoteleria.hoteleria.models;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
 
+/* Entity promocion */
 @Entity
 @Table(name = "promociones")
 public class promocion {
@@ -33,7 +34,7 @@ public class promocion {
     private String tipo_servicio;
 
     @OneToMany(mappedBy = "promocion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<descuentos> descuentos;
+    private Set<descuentos> descuentos = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -102,7 +103,20 @@ public class promocion {
     }
 
     public void setDescuentos(Set<descuentos> descuentos) {
-        this.descuentos = descuentos;
+        this.descuentos.clear();
+        if (descuentos != null) {
+            this.descuentos.addAll(descuentos);
+        }
+    }
+
+    public void addDescuento(descuentos descuento) {
+        descuentos.add(descuento);
+        descuento.setPromocion(this);
+    }
+
+    public void removeDescuento(descuentos descuento) {
+        descuentos.remove(descuento);
+        descuento.setPromocion(null);
     }
 
     public LocalDateTime getCreatedAt() {
@@ -112,5 +126,4 @@ public class promocion {
     public LocalDateTime getUpdatedAt() {
         return this.updatedAt;
     }
-
 }
