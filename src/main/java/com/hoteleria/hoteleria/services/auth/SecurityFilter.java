@@ -120,9 +120,9 @@ public class SecurityFilter {
         private void configureAuthForHabitaciones(
                         AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/habitaciones")
-                                .hasAuthority(Permission.READ_ALL_HABITACIONES.name());
+                                .permitAll();
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/habitaciones/number", "/api/v1/habitaciones/uuid")
-                                .hasAuthority(Permission.READ_ONE_HABITACION.name());
+                                .permitAll();
                 auth.requestMatchers(HttpMethod.POST, "/api/v1/habitaciones")
                                 .hasAuthority(Permission.SAVE_ONE_HABITACION.name());
                 auth.requestMatchers(HttpMethod.PATCH, "/api/v1/habitaciones")
