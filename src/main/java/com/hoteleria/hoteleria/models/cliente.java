@@ -3,15 +3,21 @@ package com.hoteleria.hoteleria.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "clientes")
-public class cliente {
+public class cliente implements UserDetails {
 
     @Id
     @GeneratedValue
@@ -28,6 +34,9 @@ public class cliente {
 
     @Column(length = 100)
     private String email;
+
+    @Column(length = 200)
+    private String password;
 
     @Column(length = 255)
     private String direccion;
@@ -56,6 +65,7 @@ public class cliente {
         this.nit = builder.nit;
         this.telefono = builder.telefono;
         this.email = builder.email;
+        this.password = builder.password;
         this.direccion = builder.direccion;
         this.role = builder.role;
         this.reservaciones = builder.reservaciones;
@@ -69,6 +79,7 @@ public class cliente {
         private String nit;
         private String telefono;
         private String email;
+        private String password;
         private String direccion;
         private role role;
         private Set<reservacion> reservaciones;
@@ -97,6 +108,11 @@ public class cliente {
 
         public Builder email(String email) {
             this.email = email;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
             return this;
         }
 
@@ -150,6 +166,14 @@ public class cliente {
         return this.email;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getDireccion() {
         return this.direccion;
     }
@@ -170,97 +194,39 @@ public class cliente {
         return this.updatedAt;
     }
 
-    // public cliente(UUID id, String nombre, String nit, String telefono, String
-    // email, String direccion,
-    // LocalDateTime createdAt, LocalDateTime updatedAt) {
-    // this.id = id;
-    // this.nombre = nombre;
-    // this.nit = nit;
-    // this.telefono = telefono;
-    // this.email = email;
-    // this.direccion = direccion;
-    // this.createdAt = createdAt;
-    // this.updatedAt = updatedAt;
-    // }
+    // Métodos de UserDetails
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-    // public UUID getId() {
-    // return this.id;
-    // }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-    // public void setId(UUID id) {
-    // this.id = id;
-    // }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-    // public String getNombre() {
-    // return this.nombre;
-    // }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
-    // public void setNombre(String nombre) {
-    // this.nombre = nombre;
-    // }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = role.getPermissions().stream()
+                .map(permissionEnum -> new SimpleGrantedAuthority(permissionEnum.name()))
+                .collect(Collectors.toList());
 
-    // public String getNit() {
-    // return this.nit;
-    // }
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return authorities;
+    }
 
-    // public void setNit(String nit) {
-    // this.nit = nit;
-    // }
-
-    // public String getTelefono() {
-    // return this.telefono;
-    // }
-
-    // public void setTelefono(String telefono) {
-    // this.telefono = telefono;
-    // }
-
-    // public String getEmail() {
-    // return this.email;
-    // }
-
-    // public void setEmail(String email) {
-    // this.email = email;
-    // }
-
-    // public String getDireccion() {
-    // return this.direccion;
-    // }
-
-    // public void setDireccion(String direccion) {
-    // this.direccion = direccion;
-    // }
-
-    // public role getRole() {
-    // return this.role;
-    // }
-
-    // public void setRole(role role) {
-    // this.role = role;
-    // }
-
-    // public Set<reservacion> getReservaciones() {
-    // return this.reservaciones;
-    // }
-
-    // public void setReservaciones(Set<reservacion> reservaciones) {
-    // this.reservaciones = reservaciones;
-    // }
-
-    // public LocalDateTime getCreatedAt() {
-    // return this.createdAt;
-    // }
-
-    // public void setCreatedAt(LocalDateTime createdAt) {
-    // this.createdAt = createdAt;
-    // }
-
-    // public LocalDateTime getUpdatedAt() {
-    // return this.updatedAt;
-    // }
-
-    // public void setUpdatedAt(LocalDateTime updatedAt) {
-    // this.updatedAt = updatedAt;
-    // }
-
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
 }

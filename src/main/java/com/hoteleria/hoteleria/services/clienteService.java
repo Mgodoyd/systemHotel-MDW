@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.hoteleria.hoteleria.dtos.clienteDto;
@@ -17,6 +18,9 @@ public class clienteService {
 
     @Autowired
     private clienteInterface clienteInterface;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Converts a {@link cliente} entity to a {@link clienteDto}.
@@ -32,6 +36,7 @@ public class clienteService {
         dto.setDireccion(cliente.getDireccion());
         dto.setTelefono(cliente.getTelefono());
         dto.setEmail(cliente.getEmail());
+        dto.setPassword(cliente.getPassword());
         dto.setRole(cliente.getRole());
         dto.setReservaciones(cliente.getReservaciones());
         return dto;
@@ -50,6 +55,7 @@ public class clienteService {
                 .nit(dto.getNit())
                 .telefono(dto.getTelefono())
                 .email(dto.getEmail())
+                .password(dto.getPassword())
                 .direccion(dto.getDireccion())
                 .role(dto.getRole())
                 .reservaciones(dto.getReservaciones())
@@ -80,8 +86,24 @@ public class clienteService {
         return null;
     }
 
+    /**
+     * Retrieves a clienteDto object by its unique nit.
+     *
+     * @param nit the unique nit of the cliente to retrieve
+     * @return the clienteDto object if found, otherwise null
+     */
+
     public clienteDto getByNit(String nit) {
         Optional<cliente> cliente = clienteInterface.findByNit(nit);
+        if (cliente.isPresent()) {
+            return convertToDto(cliente.get());
+        }
+
+        return null;
+    }
+
+    public clienteDto getByEmail(String email) {
+        Optional<cliente> cliente = clienteInterface.findByEmail(email);
         if (cliente.isPresent()) {
             return convertToDto(cliente.get());
         }
@@ -96,6 +118,7 @@ public class clienteService {
      */
     public clienteDto save(clienteDto clienteDto) {
         cliente cliente = convertToEntity(clienteDto);
+        cliente.setPassword(passwordEncoder.encode(cliente.getPassword()));
         clienteInterface.save(cliente);
         return clienteDto;
     }

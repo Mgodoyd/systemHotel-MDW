@@ -10,9 +10,11 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import com.hoteleria.hoteleria.dtos.clienteDto;
 import com.hoteleria.hoteleria.dtos.reservacionDto;
+import com.hoteleria.hoteleria.dtos.staffDto;
 import com.hoteleria.hoteleria.helpers.responseHelper;
-import com.hoteleria.hoteleria.services.reservacionService;
+import com.hoteleria.hoteleria.services.*;
 
 import jakarta.validation.Valid;
 
@@ -25,6 +27,12 @@ import jakarta.validation.Valid;
 public class reservacionController {
     @Autowired
     private reservacionService reservacionService;
+
+    @Autowired
+    private personalService personalService;
+
+    @Autowired
+    private clienteService clienteService;
 
     @GetMapping("/reservaciones") // get all reservaciones
     public ResponseEntity<responseHelper<List<reservacionDto>>> getAllReservaciones() {
@@ -49,6 +57,13 @@ public class reservacionController {
     public ResponseEntity<responseHelper<reservacionDto>> saveReservacion(
             @Valid @RequestBody reservacionDto reservacion) {
         return handleResponse(() -> {
+            staffDto existing = personalService.findById(reservacion.getCliente().getId()).orElse(null);
+            clienteDto existingNit = clienteService.getById(reservacion.getCliente().getId());
+
+            if (existing == null && existingNit == null) {
+                throw new ResourceNotFoundException("Cliente does not exist");
+            }
+
             reservacionService.save(reservacion);
 
             return reservacion;

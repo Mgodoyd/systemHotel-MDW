@@ -12,13 +12,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-/* Entity personal */
 @Entity
 @Table(name = "personal")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -34,7 +32,6 @@ public class personal implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "id_hotel", nullable = false)
-    @JsonIgnore
     private hotel hotel;
 
     @NotBlank(message = "Name is required")

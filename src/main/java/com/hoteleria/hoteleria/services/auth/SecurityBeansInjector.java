@@ -7,11 +7,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.hoteleria.hoteleria.interfaces.clienteInterface;
 import com.hoteleria.hoteleria.interfaces.personalInterface;
 
 /* validation of user login credentials */
@@ -21,6 +23,9 @@ public class SecurityBeansInjector {
 
     @Autowired
     private personalInterface userRepository;
+
+    @Autowired
+    private clienteInterface clientRepository;
 
     /**
      * Bean definition for the AuthenticationManager.
@@ -82,7 +87,10 @@ public class SecurityBeansInjector {
     public UserDetailsService userDetailsService() {
         return email -> {
             return userRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .map(user -> (UserDetails) user)
+                    .orElseGet(() -> clientRepository.findByEmail(email)
+                            .map(user -> (UserDetails) user)
+                            .orElseThrow(() -> new RuntimeException("User not found: " + email)));
         };
     }
 

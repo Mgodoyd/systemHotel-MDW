@@ -12,6 +12,7 @@ public class clienteDto {
     private String nit;
     private String telefono;
     private String email;
+    private String password;
     private String direccion;
     private Set<reservacion> reservaciones;
     private role role;
@@ -19,13 +20,15 @@ public class clienteDto {
     public clienteDto() {
     }
 
-    public clienteDto(UUID id, String nombre, String nit, String telefono, String email, String direccion,
+    public clienteDto(UUID id, String nombre, String nit, String telefono, String email, String password,
+            String direccion,
             Set<reservacion> reservaciones, role role) {
         this.id = id;
         this.nombre = nombre;
         this.nit = nit;
         this.telefono = telefono;
         this.email = email;
+        this.password = password;
         this.direccion = direccion;
         this.reservaciones = reservaciones;
         this.role = role;
@@ -69,6 +72,14 @@ public class clienteDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getDireccion() {

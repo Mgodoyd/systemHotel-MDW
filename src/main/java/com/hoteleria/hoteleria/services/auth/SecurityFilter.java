@@ -56,7 +56,7 @@ public class SecurityFilter {
                                         configureAuthForReservaciones(auth);
                                         configureAuthForFacturas(auth);
                                         configureAuthForServicios(auth);
-                                        configureAuthForPaqueos(auth);
+                                        configureAuthForParqueos(auth);
                                         configureAuthForServicioHabitaciones(auth);
                                         configureAuthForUsoInstalaciones(auth);
                                         configureAuthForPromociones(auth);
@@ -119,8 +119,7 @@ public class SecurityFilter {
 
         private void configureAuthForHabitaciones(
                         AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
-                auth.requestMatchers(HttpMethod.GET, "/api/v1/habitaciones")
-                                .permitAll();
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/habitaciones").permitAll();
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/habitaciones/number", "/api/v1/habitaciones/uuid")
                                 .permitAll();
                 auth.requestMatchers(HttpMethod.POST, "/api/v1/habitaciones")
@@ -137,8 +136,7 @@ public class SecurityFilter {
                                 .hasAuthority(Permission.READ_ALL_USERS.name());
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/clientes/nit", "/api/v1/clientes/uuid")
                                 .hasAuthority(Permission.READ_ONE_USER.name());
-                auth.requestMatchers(HttpMethod.POST, "/api/v1/clientes")
-                                .hasAuthority(Permission.SAVE_ONE_USER.name());
+                auth.requestMatchers(HttpMethod.POST, "/api/v1/clientes").permitAll();
                 auth.requestMatchers(HttpMethod.PATCH, "/api/v1/clientes")
                                 .hasAuthority(Permission.UPDATE_ONE_USER.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/clientes")
@@ -187,18 +185,18 @@ public class SecurityFilter {
                                 .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
         }
 
-        private void configureAuthForPaqueos(
+        private void configureAuthForParqueos(
                         AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/parqueos")
                                 .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/parqueos/id")
-                                .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.POST, "/api/v1/parqueos")
-                                .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.PATCH, "/api/v1/parqueos")
-                                .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/parqueos")
-                                .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
         }
 
         private void configureAuthForServicioHabitaciones(
@@ -206,13 +204,13 @@ public class SecurityFilter {
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/servicioHabitaciones")
                                 .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/servicioHabitaciones/id")
-                                .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.POST, "/api/v1/servicioHabitaciones")
-                                .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.PATCH, "/api/v1/servicioHabitaciones")
-                                .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/servicioHabitaciones")
-                                .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
         }
 
         private void configureAuthForUsoInstalaciones(
@@ -220,40 +218,40 @@ public class SecurityFilter {
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/usoInstalaciones")
                                 .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/usoInstalaciones/id")
-                                .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.POST, "/api/v1/usoInstalaciones")
-                                .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.PATCH, "/api/v1/usoInstalaciones")
-                                .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/usoInstalaciones")
-                                .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
         }
 
         private void configureAuthForPromociones(
                         AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/promociones")
                                 .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
-                auth.requestMatchers(HttpMethod.GET, "/api/v1/promociones/id")
-                                .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/promociones/id", "/api/v1/promociones/uuid")
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.POST, "/api/v1/promociones")
-                                .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.PATCH, "/api/v1/promociones")
-                                .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/promociones")
-                                .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
         }
 
         private void configureAuthForDescuentos(
                         AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
                 auth.requestMatchers(HttpMethod.GET, "/api/v1/descuentos")
                                 .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
-                auth.requestMatchers(HttpMethod.GET, "/api/v1/descuentos/id", "/api/v1/descuentos/codigo")
-                                .hasAuthority(Permission.READ_ONE_SERVICIO.name());
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/descuentos/id", "/api/v1/descuentos/uuid")
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.POST, "/api/v1/descuentos")
-                                .hasAuthority(Permission.SAVE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.PATCH, "/api/v1/descuentos")
-                                .hasAuthority(Permission.UPDATE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
                 auth.requestMatchers(HttpMethod.DELETE, "/api/v1/descuentos")
-                                .hasAuthority(Permission.DELETE_ONE_SERVICIO.name());
+                                .hasAuthority(Permission.READ_ALL_SERVICIOS.name());
         }
 }

@@ -23,4 +23,6 @@ public interface clienteInterface extends JpaRepository<cliente, UUID> {
 
     void deleteById(UUID id);
 
+    Optional<cliente> findByEmail(String email);
+
 }

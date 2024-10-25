@@ -8,6 +8,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
+import com.hoteleria.hoteleria.models.cliente;
 import com.hoteleria.hoteleria.models.personal;
 
 import java.security.Key;
@@ -35,6 +36,18 @@ public class JwtService {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
+                .setIssuedAt(issuedAt)
+                .setExpiration(expiration)
+                .signWith(generateKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateToken(cliente user, Map<String, Object> extraClaims) {
+        Date issuedAt = new Date(System.currentTimeMillis());
+        Date expiration = new Date(issuedAt.getTime() + (EXPIRATION_MINUTES * 60 * 1000));
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(user.getEmail())
                 .setIssuedAt(issuedAt)
                 .setExpiration(expiration)
                 .signWith(generateKey(), SignatureAlgorithm.HS256)

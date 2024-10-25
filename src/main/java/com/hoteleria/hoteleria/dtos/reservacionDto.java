@@ -112,11 +112,12 @@ public class reservacionDto {
         private UUID id;
         private String nombre;
         private String nit;
+        private String email;
 
         public clienteDTO() {
         }
 
-        public clienteDTO(UUID id, String nombre, String nit) {
+        public clienteDTO(UUID id, String nombre, String nit, String email) {
             this.id = id;
             this.nombre = nombre;
             this.nit = nit;
@@ -144,6 +145,10 @@ public class reservacionDto {
 
         public void setNit(String nit) {
             this.nit = nit;
+        }
+
+        public String getEmail() {
+            return this.email;
         }
     }
 

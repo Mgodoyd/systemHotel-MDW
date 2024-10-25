@@ -5,14 +5,20 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hoteleria.hoteleria.dtos.clienteDto;
+import com.hoteleria.hoteleria.dtos.staffDto;
 import com.hoteleria.hoteleria.helpers.responseHelper;
+import com.hoteleria.hoteleria.models.personal;
+import com.hoteleria.hoteleria.services.clienteService;
 import com.hoteleria.hoteleria.services.personalService;
 import com.hoteleria.hoteleria.services.auth.AuthenticationRequest;
 import com.hoteleria.hoteleria.services.auth.AuthenticationService;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
@@ -26,52 +32,64 @@ public class loginController {
     @Autowired
     private personalService userService;
 
+    @Autowired
+    private clienteService clienteService;
+
     // public loginController(AuthenticationService authenticationService) {
     // this.authenticationService = authenticationService;
     // }
 
-    // @PostMapping("/register") // Register a new user
-    // public ResponseEntity<responseHelper<Object>> register(@RequestBody personal
-    // user) {
-    // try {
+    @PostMapping("/register") // Register a new user
+    public ResponseEntity<responseHelper<Object>> register(@Valid @RequestBody personal user) {
+        try {
+            // Convertir el objeto personal a JSON y imprimirlo en consola
+            ObjectMapper objectMapper = new ObjectMapper();
+            String userJson = objectMapper.writeValueAsString(user);
+            System.out.println("Datos del usuario en JSON: " + userJson);
 
-    // staffDto existingEmail =
-    // userService.findByEmail(user.getEmail()).orElse(null);
-    // if (existingEmail == null) {
-    // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    // .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Email
-    // already exists"));
-    // }
+            staffDto existingEmail = userService.findByEmail(user.getEmail()).orElse(null);
+            clienteDto existingNit = clienteService.getByEmail(user.getEmail());
 
-    // staffDto existingUsers = userService.findByTelefono(user.getPhone());
-    // if (existingUsers != null) {
-    // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    // .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Username
-    // already exists"));
-    // }
+            if (existingEmail != null || existingNit != null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Email already exists"));
+            }
 
-    // personal createdUser = authenticationService.register(user);
+            // staffDto existingUsers = userService.findByTelefono(user.getPhone());
+            // if (existingUsers != null) {
+            // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            // .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Username
+            // already exists"));
+            // }
 
-    // return ResponseEntity.status(HttpStatus.OK)
-    // .body(new responseHelper<>("User registrated successfully", HttpStatus.OK,
-    // createdUser, null));
+            personal createdUser = authenticationService.register(user);
 
-    // } catch (Exception e) {
-    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    // .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null,
-    // e));
-    // }
-    // }
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new responseHelper<>("User registrated successfully", HttpStatus.OK,
+                            createdUser, null));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new responseHelper<>("Error", HttpStatus.INTERNAL_SERVER_ERROR, null,
+                            e.getMessage()));
+        }
+    }
 
     @PostMapping("/login") // Login a user
     public ResponseEntity<responseHelper<Object>> authenticate(@RequestBody AuthenticationRequest request) {
         try {
+            System.out.println("Datos de la solicitud de autenticación: " + request.toString());
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new responseHelper<>("Success login!", HttpStatus.OK, authenticationService.login(request),
                             null));
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null,
+                            "User not found: " + e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null, "Credentials are incorrect" + e));
+                    .body(new responseHelper<>("Error", HttpStatus.BAD_REQUEST, null,
+                            "Credentials are incorrect: " + e));
         }
     }
 
