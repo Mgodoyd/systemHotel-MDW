@@ -14,7 +14,7 @@ public enum role {
             Permission.DELETE_ONE_RESERVACION,
             Permission.READ_ONE_FACTURA, Permission.READ_ALL_SERVICIOS, Permission.READ_ONE_HABITACION,
             Permission.UPDATE_ONE_HABITACION, Permission.READ_ONE_RESERVACION,
-            Permission.READ_ONE_HUESPED, Permission.SAVE_ONE_HUESPED)),
+            Permission.READ_ONE_HUESPED, Permission.SAVE_ONE_HUESPED, Permission.SAVE_ONE_RESERVACION)),
 
     ADMIN(Arrays.asList(Permission.values())),
 
