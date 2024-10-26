@@ -14,10 +14,11 @@ import com.hoteleria.hoteleria.helpers.responseHelper;
 import com.hoteleria.hoteleria.services.usoInstalacionService;
 
 @RestController
-@CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
-        RequestMethod.GET,
-        RequestMethod.DELETE,
-        RequestMethod.PATCH }, allowedHeaders = { "Authorization", "Content-Type" })
+@CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173",
+        "https://mango-smoke-084edd70f.5.azurestaticapps.net" }, methods = { RequestMethod.POST,
+                RequestMethod.GET,
+                RequestMethod.DELETE,
+                RequestMethod.PATCH }, allowedHeaders = { "Authorization", "Content-Type" })
 @RequestMapping("/api/v1")
 public class usoInstalacionController {
     @Autowired

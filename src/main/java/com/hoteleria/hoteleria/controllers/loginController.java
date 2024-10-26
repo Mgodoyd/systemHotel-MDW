@@ -21,7 +21,7 @@ import com.hoteleria.hoteleria.services.auth.AuthenticationService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
+@CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" ,"https://mango-smoke-084edd70f.5.azurestaticapps.net"}, methods = { RequestMethod.POST,
         RequestMethod.PUT }, allowedHeaders = { "Authorization", "Content-Type" })
 @RequestMapping("/api/v1")
 public class loginController {

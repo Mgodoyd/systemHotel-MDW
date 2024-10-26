@@ -17,7 +17,7 @@ import com.hoteleria.hoteleria.services.hotelService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" }, methods = { RequestMethod.POST,
+@CrossOrigin(origins = { "*", "https://localhost/", "http://localhost:5173" ,"https://mango-smoke-084edd70f.5.azurestaticapps.net" }, methods = { RequestMethod.POST,
         RequestMethod.GET,
         RequestMethod.DELETE,
         RequestMethod.PUT }, allowedHeaders = { "Authorization", "Content-Type" })
