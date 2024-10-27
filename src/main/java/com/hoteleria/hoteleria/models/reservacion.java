@@ -23,9 +23,9 @@ public class reservacion {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
+    @JoinColumn(name = "personal", nullable = false)
     @JsonIgnore
-    private cliente cliente;
+    private personal personal;
 
     @ManyToOne
     @JoinColumn(name = "id_habitacion", nullable = false)
@@ -66,12 +66,12 @@ public class reservacion {
         this.id = id;
     }
 
-    public reservacion(UUID id, cliente cliente, habitación habitacion, Date fecha_entrada, Date fecha_salida,
+    public reservacion(UUID id, personal personal, habitación habitacion, Date fecha_entrada, Date fecha_salida,
             String estado, LocalDateTime fecha_reservacion, Set<servicio> servicios, Set<factura> facturas,
             LocalDateTime createdAt,
             LocalDateTime updatedAt) {
         this.id = id;
-        this.cliente = cliente;
+        this.personal = personal;
         this.habitacion = habitacion;
         this.fecha_entrada = fecha_entrada;
         this.fecha_salida = fecha_salida;
@@ -91,12 +91,12 @@ public class reservacion {
         this.id = id;
     }
 
-    public cliente getCliente() {
-        return this.cliente;
+    public personal getCliente() {
+        return this.personal;
     }
 
-    public void setCliente(cliente cliente) {
-        this.cliente = cliente;
+    public void setCliente(personal personal) {
+        this.personal = personal;
     }
 
     public habitación getHabitacion() {

@@ -12,7 +12,7 @@ public class staffDto {
     private UUID id;
     private rolDTO rol;
     private hotelDTO hotel;
-    private String name;
+    private String nombre;
     private String phone;
     private String email;
     private String password;
@@ -22,12 +22,12 @@ public class staffDto {
     public staffDto() {
     }
 
-    public staffDto(UUID id, rolDTO rol, hotelDTO hotel, String name, String phone, String email, String password,
+    public staffDto(UUID id, rolDTO rol, hotelDTO hotel, String nombre, String phone, String email, String password,
             String address, role role) {
         this.id = id;
         this.rol = rol;
         this.hotel = hotel;
-        this.name = name;
+        this.nombre = nombre;
         this.phone = phone;
         this.email = email;
         this.password = password;
@@ -59,12 +59,12 @@ public class staffDto {
         this.hotel = hotel;
     }
 
-    public String getName() {
-        return this.name;
+    public String getNombre() {
+        return this.nombre;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNombre(String name) {
+        this.nombre = name;
     }
 
     public String getPhone() {
@@ -168,4 +168,5 @@ public class staffDto {
         }
 
     }
+
 }

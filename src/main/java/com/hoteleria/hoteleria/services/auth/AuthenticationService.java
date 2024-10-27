@@ -62,6 +62,7 @@ public class AuthenticationService {
                 .name(request.getName())
                 .phone(request.getPhone())
                 .email(request.getEmail())
+                .nit(request.getNit())
                 .address(request.getAddress())
                 .role(request.getRole())
                 .password(passwordEncoder.encode(request.getPassword()))

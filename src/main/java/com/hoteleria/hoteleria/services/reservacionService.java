@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hoteleria.hoteleria.dtos.reservacionDto;
-import com.hoteleria.hoteleria.dtos.reservacionDto.clienteDTO;
 import com.hoteleria.hoteleria.dtos.reservacionDto.habitacionDTO;
+import com.hoteleria.hoteleria.dtos.reservacionDto.personalDTO;
 import com.hoteleria.hoteleria.interfaces.reservacionInterface;
 import com.hoteleria.hoteleria.models.*;
 
@@ -29,9 +29,9 @@ public class reservacionService {
         reservacionDto dto = new reservacionDto();
         dto.setId(reservacion.getId());
 
-        clienteDTO clienteDto = new clienteDTO();
+        personalDTO clienteDto = new personalDTO();
         clienteDto.setId(reservacion.getCliente().getId());
-        clienteDto.setNombre(reservacion.getCliente().getNombre());
+        clienteDto.setNombre(reservacion.getCliente().getName());
         clienteDto.setNit(reservacion.getCliente().getNit());
         dto.setCliente(clienteDto);
 
@@ -61,11 +61,11 @@ public class reservacionService {
         reservacion reservacion = new reservacion();
         reservacion.setId(dto.getId());
 
-        cliente.Builder cliente = new cliente.Builder()
-                .id(dto.getCliente().getId())
-                .nombre(dto.getCliente().getNombre())
-                .nit(dto.getCliente().getNit());
-        reservacion.setCliente(cliente.build());
+        personal.Builder clienteBuilder = new personal.Builder(dto.getCliente().getId())
+                .name(dto.getCliente().getNombre())
+                .nit(dto.getCliente().getNit())
+                .email(dto.getCliente().getEmail());
+        reservacion.setCliente(clienteBuilder.build());
 
         habitación habitacion = new habitación.Builder()
                 .id(dto.getHabitacion().getId())

@@ -74,7 +74,7 @@ public class personalService {
 
     private personal convertToEntity(staffDto staff) {
         personal.Builder personalBuilder = new personal.Builder(staff.getId())
-                .name(staff.getName())
+                .name(staff.getNombre())
                 .phone(staff.getPhone())
                 .email(staff.getEmail())
                 .password(staff.getPassword())
@@ -141,7 +141,7 @@ public class personalService {
     private staffDto convertDTOStaff(personal personal) {
         staffDto staff = new staffDto();
         staff.setId(personal.getId());
-        staff.setName(personal.getName());
+        staff.setNombre(personal.getName());
         staff.setPhone(personal.getPhone());
         staff.setEmail(personal.getEmail());
         staff.setPassword(personal.getPassword());

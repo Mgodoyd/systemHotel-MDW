@@ -38,7 +38,7 @@ public class clienteService {
         dto.setEmail(cliente.getEmail());
         dto.setPassword(cliente.getPassword());
         dto.setRole(cliente.getRole());
-        dto.setReservaciones(cliente.getReservaciones());
+        // dto.setReservaciones(cliente.getReservaciones());
         return dto;
     }
 
@@ -58,7 +58,7 @@ public class clienteService {
                 .password(dto.getPassword())
                 .direccion(dto.getDireccion())
                 .role(dto.getRole())
-                .reservaciones(dto.getReservaciones())
+                // .reservaciones(dto.getReservaciones())
                 .build();
 
     }

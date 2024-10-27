@@ -33,6 +33,10 @@ public class facturaService {
      *         {@link reservacionDTO.habitacionDTO} with its ID, numero, and tipo.
      */
     private facturaDto convertToDto(factura factura) {
+        if (factura == null) {
+            return null;
+        }
+
         facturaDto dto = new facturaDto();
         dto.setId(factura.getId());
         dto.setFecha_emision(factura.getFecha_emision());
@@ -40,26 +44,27 @@ public class facturaService {
         dto.setMonto_total(factura.getMonto_total());
 
         reservacionDTO reservacionDto = new reservacionDTO();
-        reservacionDto.setId(factura.getReservacion().getId());
+        reservacionDto.setId(Optional.ofNullable(factura.getReservacion()).map(reservacion::getId).orElse(null));
 
-        if (factura.getReservacion().getCliente() != null) {
-            reservacionDTO.clienteDTO clienteDto = new reservacionDTO.clienteDTO();
-            clienteDto.setId(factura.getReservacion().getCliente().getId());
-            clienteDto.setNombre(factura.getReservacion().getCliente().getNombre());
-            clienteDto.setNit(factura.getReservacion().getCliente().getNit());
-            reservacionDto.setCliente(clienteDto);
-        }
+        if (factura.getReservacion() != null) {
+            if (factura.getReservacion().getCliente() != null) {
+                reservacionDTO.personalDTO clienteDto = new reservacionDTO.personalDTO();
+                clienteDto.setId(factura.getReservacion().getCliente().getId());
+                clienteDto.setNombre(factura.getReservacion().getCliente().getName());
+                clienteDto.setNit(factura.getReservacion().getCliente().getNit());
+                reservacionDto.setCliente(clienteDto);
+            }
 
-        if (factura.getReservacion().getHabitacion() != null) {
-            reservacionDTO.habitacionDTO habitacionDto = new reservacionDTO.habitacionDTO();
-            habitacionDto.setId(factura.getReservacion().getHabitacion().getId());
-            habitacionDto.setNumero(factura.getReservacion().getHabitacion().getNumero());
-            habitacionDto.setTipo(factura.getReservacion().getHabitacion().getTipo());
-            reservacionDto.setHabitacion(habitacionDto);
+            if (factura.getReservacion().getHabitacion() != null) {
+                reservacionDTO.habitacionDTO habitacionDto = new reservacionDTO.habitacionDTO();
+                habitacionDto.setId(factura.getReservacion().getHabitacion().getId());
+                habitacionDto.setNumero(factura.getReservacion().getHabitacion().getNumero());
+                habitacionDto.setTipo(factura.getReservacion().getHabitacion().getTipo());
+                reservacionDto.setHabitacion(habitacionDto);
+            }
         }
 
         dto.setReservacion(reservacionDto);
-
         return dto;
     }
 
@@ -89,11 +94,11 @@ public class facturaService {
         reservacion.setId(dto.getReservacion().getId());
 
         if (dto.getReservacion().getCliente() != null) {
-            cliente.Builder clienteBuilder = new cliente.Builder();
-            clienteBuilder.id(dto.getReservacion().getCliente().getId());
-            clienteBuilder.nombre(dto.getReservacion().getCliente().getNombre());
-            clienteBuilder.nit(dto.getReservacion().getCliente().getNit());
-            reservacion.setCliente(clienteBuilder.build());
+            personal.Builder clienteBuilder = new personal.Builder(dto.getReservacion().getCliente().getId())
+                    .name(dto.getReservacion().getCliente().getNombre())
+                    .nit(dto.getReservacion().getCliente().getNit());
+            personal cliente = clienteBuilder.build();
+            reservacion.setCliente(cliente);
         }
         if (dto.getReservacion().getHabitacion() != null) {
             habitación habitacion = new habitación();

@@ -64,13 +64,13 @@ public class facturaDto {
 
     public static class reservacionDTO {
         private UUID id;
-        private clienteDTO cliente;
+        private personalDTO cliente;
         private habitacionDTO habitacion;
 
         public reservacionDTO() {
         }
 
-        public reservacionDTO(UUID id, clienteDTO cliente, habitacionDTO habitacion) {
+        public reservacionDTO(UUID id, personalDTO cliente, habitacionDTO habitacion) {
             this.id = id;
             this.cliente = cliente;
             this.habitacion = habitacion;
@@ -84,11 +84,11 @@ public class facturaDto {
             this.id = id;
         }
 
-        public clienteDTO getCliente() {
+        public personalDTO getCliente() {
             return this.cliente;
         }
 
-        public void setCliente(clienteDTO cliente) {
+        public void setCliente(personalDTO cliente) {
             this.cliente = cliente;
         }
 
@@ -100,15 +100,15 @@ public class facturaDto {
             this.habitacion = habitacion;
         }
 
-        public static class clienteDTO {
+        public static class personalDTO {
             private UUID id;
             private String nombre;
             private String nit;
 
-            public clienteDTO() {
+            public personalDTO() {
             }
 
-            public clienteDTO(UUID id, String nombre, String nit) {
+            public personalDTO(UUID id, String nombre, String nit) {
                 this.id = id;
                 this.nombre = nombre;
                 this.nit = nit;

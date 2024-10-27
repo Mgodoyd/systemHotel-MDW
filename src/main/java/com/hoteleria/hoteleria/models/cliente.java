@@ -41,8 +41,8 @@ public class cliente implements UserDetails {
     @Column(length = 255)
     private String direccion;
 
-    @OneToMany(mappedBy = "cliente")
-    private Set<reservacion> reservaciones;
+    // @OneToMany(mappedBy = "cliente")
+    // private Set<reservacion> reservaciones;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -68,7 +68,7 @@ public class cliente implements UserDetails {
         this.password = builder.password;
         this.direccion = builder.direccion;
         this.role = builder.role;
-        this.reservaciones = builder.reservaciones;
+        // this.reservaciones = builder.reservaciones;
         this.createdAt = builder.createdAt;
         this.updatedAt = builder.updatedAt;
     }
@@ -82,7 +82,7 @@ public class cliente implements UserDetails {
         private String password;
         private String direccion;
         private role role;
-        private Set<reservacion> reservaciones;
+        // private Set<reservacion> reservaciones;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
 
@@ -126,10 +126,10 @@ public class cliente implements UserDetails {
             return this;
         }
 
-        public Builder reservaciones(Set<reservacion> reservaciones) {
-            this.reservaciones = reservaciones;
-            return this;
-        }
+        // public Builder reservaciones(Set<reservacion> reservaciones) {
+        // this.reservaciones = reservaciones;
+        // return this;
+        // }
 
         public Builder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
@@ -182,9 +182,9 @@ public class cliente implements UserDetails {
         return this.role;
     }
 
-    public Set<reservacion> getReservaciones() {
-        return this.reservaciones;
-    }
+    // public Set<reservacion> getReservaciones() {
+    // return this.reservaciones;
+    // }
 
     public LocalDateTime getCreatedAt() {
         return this.createdAt;

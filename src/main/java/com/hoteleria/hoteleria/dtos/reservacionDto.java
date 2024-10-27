@@ -10,7 +10,7 @@ import com.hoteleria.hoteleria.models.*;
 /* Dto class reservacion */
 public class reservacionDto {
     private UUID id;
-    private clienteDTO cliente;
+    private personalDTO cliente;
     private habitacionDTO habitacion;
     private LocalDateTime fecha_reservacion;
     private Date fecha_entrada;
@@ -22,7 +22,7 @@ public class reservacionDto {
     public reservacionDto() {
     }
 
-    public reservacionDto(UUID id, clienteDTO cliente, habitacionDTO habitacion, LocalDateTime fecha_reservacion,
+    public reservacionDto(UUID id, personalDTO cliente, habitacionDTO habitacion, LocalDateTime fecha_reservacion,
             Date fecha_entrada, Date fecha_salida,
             String estado, Set<servicio> servicios, Set<factura> facturas) {
         this.id = id;
@@ -44,11 +44,11 @@ public class reservacionDto {
         this.id = id;
     }
 
-    public clienteDTO getCliente() {
+    public personalDTO getCliente() {
         return this.cliente;
     }
 
-    public void setCliente(clienteDTO cliente) {
+    public void setCliente(personalDTO cliente) {
         this.cliente = cliente;
     }
 
@@ -108,16 +108,16 @@ public class reservacionDto {
         this.facturas = facturas;
     }
 
-    public static class clienteDTO {
+    public static class personalDTO {
         private UUID id;
         private String nombre;
         private String nit;
         private String email;
 
-        public clienteDTO() {
+        public personalDTO() {
         }
 
-        public clienteDTO(UUID id, String nombre, String nit, String email) {
+        public personalDTO(UUID id, String nombre, String nit, String email) {
             this.id = id;
             this.nombre = nombre;
             this.nit = nit;

@@ -3,6 +3,7 @@ package com.hoteleria.hoteleria.models;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class personal implements UserDetails {
     private hotel hotel;
 
     @NotBlank(message = "Name is required")
-    @Column(length = 100, nullable = false)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
 
     @NotBlank(message = "Phone is required")
@@ -49,6 +50,9 @@ public class personal implements UserDetails {
     @Column(length = 100, nullable = false)
     private String email;
 
+    @Column(length = 50)
+    private String nit;
+
     @NotBlank(message = "Password is required")
     @Column(length = 200)
     private String password;
@@ -61,6 +65,9 @@ public class personal implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
     private role role;
+
+    @OneToMany(mappedBy = "personal")
+    private Set<reservacion> reservaciones;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -82,7 +89,9 @@ public class personal implements UserDetails {
         this.email = builder.email;
         this.password = builder.password;
         this.address = builder.address;
+        this.reservaciones = builder.reservaciones;
         this.role = builder.role;
+        this.nit = builder.nit;
         this.createdAt = builder.createdAt;
         this.updatedAt = builder.updatedAt;
     }
@@ -94,6 +103,8 @@ public class personal implements UserDetails {
         private String name;
         private String phone;
         private String email;
+        private String nit;
+        private Set<reservacion> reservaciones;
         private String password;
         private String address;
         private role role;
@@ -124,6 +135,11 @@ public class personal implements UserDetails {
             return this;
         }
 
+        public Builder nit(String nit) {
+            this.nit = nit;
+            return this;
+        }
+
         public Builder email(String email) {
             this.email = email;
             return this;
@@ -141,6 +157,11 @@ public class personal implements UserDetails {
 
         public Builder role(role role) {
             this.role = role;
+            return this;
+        }
+
+        public Builder reservaciones(Set<reservacion> reservaciones) {
+            this.reservaciones = reservaciones;
             return this;
         }
 
@@ -170,8 +191,16 @@ public class personal implements UserDetails {
         return this.phone;
     }
 
+    public String getNit() {
+        return this.nit;
+    }
+
     public String getEmail() {
         return this.email;
+    }
+
+    public Set<reservacion> getReservaciones() {
+        return this.reservaciones;
     }
 
     public role getRole() {
