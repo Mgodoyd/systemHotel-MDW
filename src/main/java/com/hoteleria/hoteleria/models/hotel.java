@@ -46,9 +46,11 @@ public class hotel {
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     // @JsonManagedReference
+    @JsonIgnore
     private Set<personal> staff;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<habitación> rooms;
 
     @CreationTimestamp
